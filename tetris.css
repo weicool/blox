@@ -1,0 +1,108 @@
+/***** Layout *****/
+
+body {
+  font: 12px "Lucida Grande", "Lucida Sans Unicode", verdana, sans-serif;
+	color: #444;
+	padding: 0;
+  margin: 0;
+	min-width: 500px;
+}
+
+a:link, a:visited, a:active {
+  color: #09F;
+  text-decoration: none; 
+}
+
+#tetris_container {
+  text-align: center;
+  width: 700px;
+  margin-top: 50px;
+}
+
+#stats {
+  margin-top: 10px;
+}
+
+#score {
+  font-size: 3em;
+  margin-bottom: 30px;
+}
+
+#level {
+}
+
+#start_button {
+  margin-top: 50px;
+  font-size: 2em;
+}
+
+#controls {
+  margin-top: 50px;
+}
+
+.sfx {
+  height: 0;
+  width: 0;
+}
+
+.info {
+  padding: 20px;
+  text-align: left;
+  font-size: 0.9em;
+}
+
+.error {
+  margin: 30px;
+  text-align: center;
+  color: #F00;
+  font-weight: bold;
+}
+
+/***** Game *****/
+
+#tetris {
+  border-collapse: collapse;
+  border: 2px solid #AAA;
+  margin: 10px;
+  background: #FBFBFB;
+  float: right;
+}
+
+#tetris td {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+.block_o {
+  background-color: orange;
+}
+
+.block_i {
+  background-color: brown;
+}
+
+.block_s {
+  background-color: magenta;
+}
+
+.block_z {
+  background-color: purple;
+}
+
+.block_j {
+  background-color: aqua;
+}
+
+.block_l {
+  background-color: lime;
+}
+
+.block_t {
+  background-color: teal;
+}
+
+.block_o, .block_i, .block_s, .block_z, .block_j, .block_l, .block_t {
+  background-image: url('block_bg.png');
+}
