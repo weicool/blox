@@ -13,7 +13,7 @@ a:link, a:visited, a:active {
   text-decoration: none; 
 }
 
-#tetris_container {
+#blox_container {
   text-align: center;
   width: 700px;
   margin-top: 50px;
@@ -60,7 +60,7 @@ a:link, a:visited, a:active {
 
 /***** Game *****/
 
-#tetris {
+#blox {
   border-collapse: collapse;
   border: 2px solid #AAA;
   margin: 10px;
@@ -68,7 +68,7 @@ a:link, a:visited, a:active {
   float: right;
 }
 
-#tetris td {
+#blox td {
   width: 20px;
   height: 20px;
   padding: 0;
@@ -104,5 +104,5 @@ a:link, a:visited, a:active {
 }
 
 .block_o, .block_i, .block_s, .block_z, .block_j, .block_l, .block_t {
-  background-image: url('block_bg.png');
+  background-image: url('images/block_bg.png');
 }

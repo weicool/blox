@@ -1,37 +1,37 @@
 /*
-  JSTetris
+  Blox
   Author: Wei Yeh
 */
 
-var Tetris = {};
+var Blox = {};
 
-Tetris.Speeds = { slow: 600, medium: 460, fast: 50 };
+Blox.Speeds = { slow: 600, medium: 460, fast: 50 };
 
-Tetris.Keys = { down: 83, down_alt: 40, left: 65, left_alt: 37, right: 68, right_alt: 39, rotate: 32, pause: 80 };
+Blox.Keys = { down: 83, down_alt: 40, left: 65, left_alt: 37, right: 68, right_alt: 39, rotate: 32, pause: 80 };
 
-Tetris.States = { game_over: -1, paused: 0, new_game: 1, new_block: 2, moving: 3 };
+Blox.States = { game_over: -1, paused: 0, new_game: 1, new_block: 2, moving: 3 };
 
-Tetris.BlockPointingDir = { horizontal: 0, vertical: 1, north: 2, south: 3, east: 4, west: 5 };
+Blox.BlockPointingDir = { horizontal: 0, vertical: 1, north: 2, south: 3, east: 4, west: 5 };
 
-Tetris.Dir = { left: 1, down: 2, right: 3 };
+Blox.Dir = { left: 1, down: 2, right: 3 };
 
-Tetris.Game = Class.create({
+Blox.Game = Class.create({
   
   initialize: function() {
     /* board setup */
-    this.boardContainer = $("tetris");
+    this.boardContainer = $("blox");
     this.boardWidth = 10;
     this.boardLength = 20;
     this.setUpBoard();
     
     /* game setup */
-    this.speed = Tetris.Speeds.fast;
-    this.state = Tetris.States.new_game;
+    this.speed = Blox.Speeds.medium;
+    this.state = Blox.States.new_game;
     
     this.moveFastInterval = null;
     this.moveFastTimeout = null;
     this.moveFastDir = null;
-    this.canAutoMoveFast = navigator.userAgent.match(/WebKit/);
+    this.canAutoMoveFast = false;
     
     /* stats setup */
     this.scoreContainer = $("score");
@@ -50,7 +50,7 @@ Tetris.Game = Class.create({
   /***** Game Operation *****/
   
   start: function() {
-    this.state = Tetris.States.new_block;
+    this.state = Blox.States.new_block;
     this.clearBoard();
     this.resetStats();
     this.startTick();
@@ -104,33 +104,33 @@ Tetris.Game = Class.create({
     while (true) {
       switch (this.state) {
         
-        case Tetris.States.new_block:
+        case Blox.States.new_block:
           var block = this.newBlock();
           if (this.canFitBlock(block.cells)) {
             this.activeBlock = block;
             this.activeBlock.setUp();
-            this.state = Tetris.States.moving;
+            this.state = Blox.States.moving;
           } else {
             this.activeBlock = null;
-            this.state = Tetris.States.game_over;
+            this.state = Blox.States.game_over;
           }
           break;
         
-        case Tetris.States.moving:
+        case Blox.States.moving:
           if (this.activeBlock.canMoveDown()) {
             this.activeBlock.moveDown();
           } else {
             this.clear();
-            this.state = Tetris.States.new_block;
+            this.state = Blox.States.new_block;
             continue;
           }
           break;
         
         default:
-          this.state = Tetris.States.game_over;
+          this.state = Blox.States.game_over;
           alert("Game Over!");
           this.stopTick();
-          Tetris.startButton.enable();
+          Blox.startButton.enable();
       }
       
       break;  // break while
@@ -139,40 +139,40 @@ Tetris.Game = Class.create({
   },
   
   move: function(event) {
-    if (this.state == Tetris.States.moving) {
+    if (this.state == Blox.States.moving) {
       switch (event.keyCode) {
         /* Move */
-        case Tetris.Keys.left:
-        case Tetris.Keys.left_alt:
+        case Blox.Keys.left:
+        case Blox.Keys.left_alt:
           this.activeBlock.moveLeft();
           this.startMoveFast(this.activeBlock.moveLeft);
           break;
-        case Tetris.Keys.right:
-        case Tetris.Keys.right_alt:
+        case Blox.Keys.right:
+        case Blox.Keys.right_alt:
           this.activeBlock.moveRight();
           this.startMoveFast(this.activeBlock.moveRight);
           break;
-        case Tetris.Keys.down:
-        case Tetris.Keys.down_alt:
+        case Blox.Keys.down:
+        case Blox.Keys.down_alt:
           this.activeBlock.moveDown();
           this.startMoveFast(this.activeBlock.moveDown);
           break;
-        case Tetris.Keys.rotate:
+        case Blox.Keys.rotate:
           this.activeBlock.rotate();
           break;
         /* Other game control */
-        case Tetris.Keys.pause:
+        case Blox.Keys.pause:
           this.stopTick();
-          this.state = Tetris.States.paused;
+          this.state = Blox.States.paused;
           break;
         default:
           ;
       }
-    } else if (this.state == Tetris.States.paused) {
+    } else if (this.state == Blox.States.paused) {
       switch (event.keyCode) {
-        case Tetris.Keys.pause:
+        case Blox.Keys.pause:
           this.startTick();
-          this.state = Tetris.States.moving;
+          this.state = Blox.States.moving;
           break;
         default:
           ;
@@ -189,7 +189,7 @@ Tetris.Game = Class.create({
       for (var x = 0; x < this.boardWidth; x++) {
         col = new Element("td");
         row.appendChild(col);
-        this.board[y][x] = new Tetris.Cell(y, x, col);
+        this.board[y][x] = new Blox.Cell(y, x, col);
       }
       this.boardContainer.appendChild(row);
     }
@@ -211,8 +211,8 @@ Tetris.Game = Class.create({
   newBlock: function() {
     var y = 0;
     var x = Math.floor(this.boardWidth / 2) - 1;
-    var i = Math.round(Math.random() * (Tetris.BlockTypes.length - 1));
-    var block = new Tetris.BlockTypes[i](y, x);
+    var i = Math.round(Math.random() * (Blox.BlockTypes.length - 1));
+    var block = new Blox.BlockTypes[i](y, x);
     return block;
   },
   
@@ -365,7 +365,7 @@ Tetris.Game = Class.create({
   
 });
 
-Tetris.Cell = Class.create({
+Blox.Cell = Class.create({
   
   initialize: function(y, x, tableCell) {
     this.y = y;
@@ -391,7 +391,7 @@ Tetris.Cell = Class.create({
 });
 
 /** Blocks */
-Tetris.Block = Class.create({
+Blox.Block = Class.create({
   
   initialize: function(positions) {
     this.cells = positions;
@@ -406,7 +406,7 @@ Tetris.Block = Class.create({
     var pos;
     for (var i = 0; i < positions.length; i++) {
       pos = positions[i];
-      this.cells[this.cells.length] = this.markCell(Tetris.game.board[pos.y][pos.x]);
+      this.cells[this.cells.length] = this.markCell(Blox.game.board[pos.y][pos.x]);
     }
   },
   
@@ -415,7 +415,7 @@ Tetris.Block = Class.create({
    * Must first confirm canMarkCell(). 
    */
   markCell: function(cell) {
-    // assert(Tetris.game.canMarkCell(cell.y, cell.x), "Cell at Y: " + cell.y + ", X: " + cell.x + " cannot be marked!");
+    // assert(Blox.game.canMarkCell(cell.y, cell.x), "Cell at Y: " + cell.y + ", X: " + cell.x + " cannot be marked!");
 
     cell.mark(this);
     return cell;
@@ -446,7 +446,7 @@ Tetris.Block = Class.create({
    */
   moveDownUnit: function (cell) {  
     this.unmarkCell(cell);
-    var newCell = Tetris.game.board[cell.y + 1][cell.x];
+    var newCell = Blox.game.board[cell.y + 1][cell.x];
     this.cells[this.cells.length] = this.markCell(newCell);
   },
 
@@ -478,7 +478,7 @@ Tetris.Block = Class.create({
     var newPos, cell;
     for (var i = 0; i < this.cells.length; i++) {
       newPos = newPositions[i];
-      cell = Tetris.game.board[newPos.y][newPos.x];
+      cell = Blox.game.board[newPos.y][newPos.x];
       this.cells[i] = this.markCell(cell);
     }
   },
@@ -490,8 +490,8 @@ Tetris.Block = Class.create({
       newPos = newPositions[i];
       newY = newPos.y;
       newX = newPos.x;
-      if (!Tetris.game.isValidCell(newY, newX) || 
-          (!Tetris.game.canMarkCell(newY, newX) && !this.contains(Tetris.game.board[newY][newX]))) {
+      if (!Blox.game.isValidCell(newY, newX) || 
+          (!Blox.game.canMarkCell(newY, newX) && !this.contains(Blox.game.board[newY][newX]))) {
         return false;
       }
     }
@@ -521,7 +521,7 @@ Tetris.Block = Class.create({
   
 });
 
-Tetris.O = Class.create(Tetris.Block, {
+Blox.O = Class.create(Blox.Block, {
   
   initialize: function($super, y, x) {
     this.cellClass = "block_o";
@@ -535,11 +535,11 @@ Tetris.O = Class.create(Tetris.Block, {
   
 });
 
-Tetris.I = Class.create(Tetris.Block, {
+Blox.I = Class.create(Blox.Block, {
   
   initialize: function($super, y, x) {
     this.cellClass = "block_i";
-    this.state = Tetris.BlockPointingDir.horizontal;
+    this.state = Blox.BlockPointingDir.horizontal;
     $super([
       { "y": y, "x": x - 2 },
       { "y": y, "x": x - 1 },
@@ -550,14 +550,14 @@ Tetris.I = Class.create(Tetris.Block, {
   
   rotate: function() {
     var newPositions, newState;
-    if (this.state == Tetris.BlockPointingDir.vertical) {
+    if (this.state == Blox.BlockPointingDir.vertical) {
       newPositions = [
         { "y": this.cells[0].y + 2, "x": this.cells[0].x - 2 },
         { "y": this.cells[1].y + 1, "x": this.cells[1].x - 1 },
         { "y": this.cells[2].y, "x": this.cells[2].x },
         { "y": this.cells[3].y - 1, "x": this.cells[3].x + 1 }
       ];
-      newState = Tetris.BlockPointingDir.horizontal;
+      newState = Blox.BlockPointingDir.horizontal;
     } else {
       newPositions = [
         { "y": this.cells[0].y - 2, "x": this.cells[0].x + 2 },
@@ -565,7 +565,7 @@ Tetris.I = Class.create(Tetris.Block, {
         { "y": this.cells[2].y, "x": this.cells[2].x },
         { "y": this.cells[3].y + 1, "x": this.cells[3].x - 1 }
       ];
-      newState = Tetris.BlockPointingDir.vertical;
+      newState = Blox.BlockPointingDir.vertical;
     }
     
     if (this.canMoveTo(newPositions)) {
@@ -576,11 +576,11 @@ Tetris.I = Class.create(Tetris.Block, {
   
 });
 
-Tetris.S = Class.create(Tetris.Block, {
+Blox.S = Class.create(Blox.Block, {
   
   initialize: function($super, y, x) {
     this.cellClass = "block_s";
-    this.state = Tetris.BlockPointingDir.horizontal;
+    this.state = Blox.BlockPointingDir.horizontal;
     $super([
       { "y": y + 1, "x": x - 1 },
       { "y": y, "x": x },
@@ -591,14 +591,14 @@ Tetris.S = Class.create(Tetris.Block, {
   
   rotate: function() {
     var newPositions, newState;
-    if (this.state == Tetris.BlockPointingDir.vertical) {
+    if (this.state == Blox.BlockPointingDir.vertical) {
       newPositions = [
         { "y": this.cells[0].y + 1, "x": this.cells[0].x - 1 },
         { "y": this.cells[1].y - 1, "x": this.cells[1].x - 1 },
         { "y": this.cells[2].y, "x": this.cells[2].x },
         { "y": this.cells[3].y - 2, "x": this.cells[3].x }
       ];
-      newState = Tetris.BlockPointingDir.horizontal;
+      newState = Blox.BlockPointingDir.horizontal;
     } else {
       newPositions = [
         { "y": this.cells[0].y - 1, "x": this.cells[0].x + 1 },
@@ -606,7 +606,7 @@ Tetris.S = Class.create(Tetris.Block, {
         { "y": this.cells[2].y, "x": this.cells[2].x },
         { "y": this.cells[3].y + 2, "x": this.cells[3].x }
       ];
-      newState = Tetris.BlockPointingDir.vertical;
+      newState = Blox.BlockPointingDir.vertical;
     }
     
     if (this.canMoveTo(newPositions)) {
@@ -617,11 +617,11 @@ Tetris.S = Class.create(Tetris.Block, {
   
 });
 
-Tetris.Z = Class.create(Tetris.Block, {
+Blox.Z = Class.create(Blox.Block, {
   
   initialize: function($super, y, x) {
     this.cellClass = "block_z";
-    this.state = Tetris.BlockPointingDir.horizontal;
+    this.state = Blox.BlockPointingDir.horizontal;
     $super([
       { "y": y, "x": x - 1 },
       { "y": y, "x": x },
@@ -632,14 +632,14 @@ Tetris.Z = Class.create(Tetris.Block, {
   
   rotate: function() {
     var newPositions, newState;
-    if (this.state == Tetris.BlockPointingDir.vertical) {
+    if (this.state == Blox.BlockPointingDir.vertical) {
       newPositions = [
         { "y": this.cells[0].y, "x": this.cells[0].x - 2 },
         { "y": this.cells[1].y - 1, "x": this.cells[1].x - 1 },
         { "y": this.cells[2].y, "x": this.cells[2].x },
         { "y": this.cells[3].y - 1, "x": this.cells[3].x + 1 }
       ];
-      newState = Tetris.BlockPointingDir.horizontal;
+      newState = Blox.BlockPointingDir.horizontal;
     } else {
       newPositions = [
         { "y": this.cells[0].y, "x": this.cells[0].x + 2 },
@@ -647,7 +647,7 @@ Tetris.Z = Class.create(Tetris.Block, {
         { "y": this.cells[2].y, "x": this.cells[2].x },
         { "y": this.cells[3].y + 1, "x": this.cells[3].x - 1 }
       ];
-      newState = Tetris.BlockPointingDir.vertical;
+      newState = Blox.BlockPointingDir.vertical;
     }
     
     if (this.canMoveTo(newPositions)) {
@@ -658,11 +658,11 @@ Tetris.Z = Class.create(Tetris.Block, {
   
 });
 
-Tetris.T = Class.create(Tetris.Block, {
+Blox.T = Class.create(Blox.Block, {
   
   initialize: function($super, y, x) {
     this.cellClass = "block_t";
-    this.state = Tetris.BlockPointingDir.south;
+    this.state = Blox.BlockPointingDir.south;
     $super([
       { "y": y, "x": x - 1 },
       { "y": y, "x": x },
@@ -681,17 +681,17 @@ Tetris.T = Class.create(Tetris.Block, {
     ];
     
     switch (this.state) {
-      case Tetris.BlockPointingDir.south:
+      case Blox.BlockPointingDir.south:
         newPositions[2] = { "y": this.cells[2].y - 1, "x": this.cells[2].x - 1 };
-        newState = Tetris.BlockPointingDir.west;
+        newState = Blox.BlockPointingDir.west;
         break;
-      case Tetris.BlockPointingDir.west:
+      case Blox.BlockPointingDir.west:
         newPositions[3] = { "y": this.cells[3].y - 1, "x": this.cells[3].x + 1 };
-        newState = Tetris.BlockPointingDir.north;
+        newState = Blox.BlockPointingDir.north;
         break;
-      case Tetris.BlockPointingDir.north:
+      case Blox.BlockPointingDir.north:
         newPositions[0] = { "y": this.cells[0].y + 1, "x": this.cells[0].x + 1 };
-        newState = Tetris.BlockPointingDir.east;
+        newState = Blox.BlockPointingDir.east;
         break;
       default:    /* east */
         /* move cells back to their original slots */
@@ -701,7 +701,7 @@ Tetris.T = Class.create(Tetris.Block, {
           { "y": this.cells[3].y, "x": this.cells[3].x },
           { "y": this.cells[0].y, "x": this.cells[0].x }
         ];
-        newState = Tetris.BlockPointingDir.south;
+        newState = Blox.BlockPointingDir.south;
         break;
     }
     
@@ -713,11 +713,11 @@ Tetris.T = Class.create(Tetris.Block, {
   
 });
 
-Tetris.J = Class.create(Tetris.Block, {
+Blox.J = Class.create(Blox.Block, {
   
   initialize: function($super, y, x) {
     this.cellClass = "block_j";
-    this.state = Tetris.BlockPointingDir.west;
+    this.state = Blox.BlockPointingDir.west;
     $super([
       { "y": y, "x": x - 1 },
       { "y": y, "x": x },
@@ -730,32 +730,32 @@ Tetris.J = Class.create(Tetris.Block, {
     var newPositions, newState;
     
     switch (this.state) {
-      case Tetris.BlockPointingDir.west:
+      case Blox.BlockPointingDir.west:
         newPositions = [
           { "y": this.cells[0].y - 1, "x": this.cells[0].x + 1 },
           { "y": this.cells[1].y, "x": this.cells[1].x },
           { "y": this.cells[2].y + 1, "x": this.cells[2].x - 1 },
           { "y": this.cells[3].y, "x": this.cells[3].x - 2 }
         ];
-        newState = Tetris.BlockPointingDir.north;
+        newState = Blox.BlockPointingDir.north;
         break;
-      case Tetris.BlockPointingDir.north:
+      case Blox.BlockPointingDir.north:
         newPositions = [
           { "y": this.cells[0].y + 1, "x": this.cells[0].x + 1 },
           { "y": this.cells[1].y, "x": this.cells[1].x },
           { "y": this.cells[2].y - 1, "x": this.cells[2].x - 1 },
           { "y": this.cells[3].y - 2, "x": this.cells[3].x }
         ];
-        newState = Tetris.BlockPointingDir.east;
+        newState = Blox.BlockPointingDir.east;
         break;
-      case Tetris.BlockPointingDir.east:
+      case Blox.BlockPointingDir.east:
         newPositions = [
           { "y": this.cells[0].y + 1, "x": this.cells[0].x - 1 },
           { "y": this.cells[1].y, "x": this.cells[1].x },
           { "y": this.cells[2].y - 1, "x": this.cells[2].x + 1 },
           { "y": this.cells[3].y, "x": this.cells[3].x + 2 }
         ];
-        newState = Tetris.BlockPointingDir.south;        
+        newState = Blox.BlockPointingDir.south;        
         break;
       default:    /* south */
         newPositions = [
@@ -764,7 +764,7 @@ Tetris.J = Class.create(Tetris.Block, {
           { "y": this.cells[2].y + 1, "x": this.cells[2].x + 1 },
           { "y": this.cells[3].y + 2, "x": this.cells[3].x }
         ];
-        newState = Tetris.BlockPointingDir.west;
+        newState = Blox.BlockPointingDir.west;
         break;
     }
     
@@ -776,11 +776,11 @@ Tetris.J = Class.create(Tetris.Block, {
   
 });
 
-Tetris.L = Class.create(Tetris.Block, {
+Blox.L = Class.create(Blox.Block, {
   
   initialize: function($super, y, x) {
     this.cellClass = "block_l";
-    this.state = Tetris.BlockPointingDir.east;
+    this.state = Blox.BlockPointingDir.east;
     $super([
       { "y": y, "x": x + 1 },
       { "y": y, "x": x },
@@ -793,32 +793,32 @@ Tetris.L = Class.create(Tetris.Block, {
     var newPositions, newState;
     
     switch (this.state) {
-      case Tetris.BlockPointingDir.west:
+      case Blox.BlockPointingDir.west:
         newPositions = [
           { "y": this.cells[0].y - 1, "x": this.cells[0].x + 1 },
           { "y": this.cells[1].y, "x": this.cells[1].x },
           { "y": this.cells[2].y + 1, "x": this.cells[2].x - 1 },
           { "y": this.cells[3].y + 2, "x": this.cells[3].x }
         ];
-        newState = Tetris.BlockPointingDir.north;
+        newState = Blox.BlockPointingDir.north;
         break;
-      case Tetris.BlockPointingDir.north:
+      case Blox.BlockPointingDir.north:
         newPositions = [
           { "y": this.cells[0].y + 1, "x": this.cells[0].x + 1 },
           { "y": this.cells[1].y, "x": this.cells[1].x },
           { "y": this.cells[2].y - 1, "x": this.cells[2].x - 1 },
           { "y": this.cells[3].y, "x": this.cells[3].x - 2 }
         ];
-        newState = Tetris.BlockPointingDir.east;
+        newState = Blox.BlockPointingDir.east;
         break;
-      case Tetris.BlockPointingDir.east:
+      case Blox.BlockPointingDir.east:
         newPositions = [
           { "y": this.cells[0].y + 1, "x": this.cells[0].x - 1 },
           { "y": this.cells[1].y, "x": this.cells[1].x },
           { "y": this.cells[2].y - 1, "x": this.cells[2].x + 1 },
           { "y": this.cells[3].y - 2, "x": this.cells[3].x }
         ];
-        newState = Tetris.BlockPointingDir.south;        
+        newState = Blox.BlockPointingDir.south;        
         break;
       default:    /* south */
         newPositions = [
@@ -827,7 +827,7 @@ Tetris.L = Class.create(Tetris.Block, {
           { "y": this.cells[2].y + 1, "x": this.cells[2].x + 1 },
           { "y": this.cells[3].y, "x": this.cells[3].x + 2 }
         ];
-        newState = Tetris.BlockPointingDir.west;
+        newState = Blox.BlockPointingDir.west;
         break;
     }
     
@@ -839,7 +839,7 @@ Tetris.L = Class.create(Tetris.Block, {
   
 });
 
-Tetris.BlockTypes = [Tetris.O, Tetris.I, Tetris.S, Tetris.Z, Tetris.T, Tetris.J, Tetris.L];
+Blox.BlockTypes = [Blox.O, Blox.I, Blox.S, Blox.Z, Blox.T, Blox.J, Blox.L];
 
 /***** Utility Functions *****/
 
@@ -851,11 +851,11 @@ function assert(condition, msg) {
 }
 
 document.observe("dom:loaded", function() {
-  Tetris.game = new Tetris.Game();
+  Blox.game = new Blox.Game();
   
-  Tetris.startButton = $("start_button");
-  Tetris.startButton.observe("click", function () {
-    Tetris.startButton.disable();
-    Tetris.game.start();
+  Blox.startButton = $("start_button");
+  Blox.startButton.observe("click", function () {
+    Blox.startButton.disable();
+    Blox.game.start();
   });
 });
