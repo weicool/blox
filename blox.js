@@ -31,16 +31,13 @@ Blox.Game = Class.create({
     this.moveFastInterval = null;
     this.moveFastTimeout = null;
     this.moveFastDir = null;
-    this.canAutoMoveFast = false;
     
     /* stats setup */
     this.scoreContainer = $("score");
     this.levelContainer = $$("#level span")[0];
     
     Event.observe(document, "keydown", this.move.bind(this));
-    Event.observe(document, "keyup", function () {
-      this.stopMoveFast();
-    }.bind(this));
+    Event.observe(document, "keyup", this.stopMoveFast.bind(this));
     
     /* sounds setup */
     //this.music = $("music");
@@ -67,43 +64,10 @@ Blox.Game = Class.create({
     //this.music.Stop();
   },
   
-  /**
-   * Sets up a timeout callback to this.moveFast() for browsers
-   * that don't automatically fire keydown events when a key is held down.
-   * Clears existing timeout to prevent a block 
-   * from moving fast in more than one direction.
-   */
-  startMoveFast: function(moveDir) {
-    if (!this.canAutoMoveFast) {
-      if (this.moveFastTimeout) {
-        clearTimeout(this.moveFastTimeout);
-        this.moveFastTimeout = null;
-      }
-      this.moveFastDir = moveDir;
-      this.moveFastTimeout = setTimeout(this.moveFast.bind(this), 500);
-    }
-  },
-  
-  /**
-   * Repeatedly calls the method to move fast in a given direction, if it exists.
-   */
-  moveFast: function() {
-    if (this.moveFastDir != null) {
-      this.moveFastInterval = setInterval(this.moveFastDir.bind(this.activeBlock), 40);
-    }
-  },
-  
-  stopMoveFast: function() {
-    clearInterval(this.moveFastInterval);
-    this.moveFastInterval = null;
-    this.moveFastDir = null;
-  },
-  
   /** Advances the game. */
   tick: function() {
     while (true) {
       switch (this.state) {
-        
         case Blox.States.new_block:
           var block = this.newBlock();
           if (this.canFitBlock(block.cells)) {
@@ -115,7 +79,6 @@ Blox.Game = Class.create({
             this.state = Blox.States.game_over;
           }
           break;
-        
         case Blox.States.moving:
           if (this.activeBlock.canMoveDown()) {
             this.activeBlock.moveDown();
@@ -125,7 +88,6 @@ Blox.Game = Class.create({
             continue;
           }
           break;
-        
         default:
           this.state = Blox.States.game_over;
           alert("Game Over!");
@@ -135,7 +97,6 @@ Blox.Game = Class.create({
       
       break;  // break while
     }
-    
   },
   
   move: function(event) {
@@ -165,8 +126,6 @@ Blox.Game = Class.create({
           this.stopTick();
           this.state = Blox.States.paused;
           break;
-        default:
-          ;
       }
     } else if (this.state == Blox.States.paused) {
       switch (event.keyCode) {
@@ -174,14 +133,40 @@ Blox.Game = Class.create({
           this.startTick();
           this.state = Blox.States.moving;
           break;
-        default:
-          ;
       }
     }
   },
   
+  /**
+   * Sets up a timeout callback to this.moveFast() to move block when keyis held down.
+   * Clears existing timeout to prevent a block from moving fast in more than one direction.
+   */
+  startMoveFast: function(moveDir) {
+    if (this.moveFastTimeout) {
+      clearTimeout(this.moveFastTimeout);
+      this.moveFastTimeout = null;
+    }
+    this.moveFastDir = moveDir;
+    this.moveFastTimeout = setTimeout(this.moveFast.bind(this), 500);
+  },
+  
+  /**
+   * Repeatedly calls the method to move fast in a given direction, if necessary.
+   */
+  moveFast: function() {
+    if (this.moveFastDir) {
+      this.moveFastInterval = setInterval(this.moveFastDir.bind(this.activeBlock), 30);
+    }
+  },
+  
+  stopMoveFast: function() {
+    clearInterval(this.moveFastInterval);
+    this.moveFastInterval = null;
+    this.moveFastDir = null;
+  },
+  
   setUpBoard: function() {
-    this.board = new Array();
+    this.board = [];
     var row, col;
     for (var y = 0; y < this.boardLength; y++) {
       row = new Element("tr");
