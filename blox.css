@@ -14,18 +14,45 @@ a:link, a:visited, a:active {
 }
 
 #blox_container {
-  text-align: center;
-  width: 700px;
+  width: 750px;
   margin-top: 50px;
 }
 
-#stats {
-  margin-top: 10px;
+#leaderboard {
+  float: left;
+  width: 20em;
+  text-align: center;
 }
 
-#score {
+#leaderboard h2 {
+  font-weight: normal;
+}
+
+#misc {
+  width: 20em;
+  float: right;
+}
+
+#stats {
+  margin-top: 1.5em;
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+  position: relative;
+}
+
+#stats li {
+  margin-bottom: 1em;
+  font-size: 0.9em;
+}
+
+#stats li span {
+  display: block;
+  font-size: 2em;
+}
+
+#stats li #score {
   font-size: 3em;
-  margin-bottom: 30px;
 }
 
 #level {
@@ -46,9 +73,11 @@ a:link, a:visited, a:active {
 }
 
 .info {
-  padding: 20px;
+  clear: both;
+  padding: 3em;
   text-align: left;
   font-size: 0.9em;
+  color: #999;
 }
 
 .error {
@@ -61,11 +90,11 @@ a:link, a:visited, a:active {
 /***** Game *****/
 
 #blox {
+  float: left;
   border-collapse: collapse;
   border: 2px solid #AAA;
   margin: 10px;
   background: #FBFBFB;
-  float: right;
 }
 
 #blox td {
@@ -80,15 +109,15 @@ a:link, a:visited, a:active {
 }
 
 .block_i {
-  background-color: brown;
+  background-color: red;
 }
 
 .block_s {
-  background-color: magenta;
+  background-color: #AEFF00;
 }
 
 .block_z {
-  background-color: purple;
+  background-color: magenta;
 }
 
 .block_j {
@@ -100,7 +129,7 @@ a:link, a:visited, a:active {
 }
 
 .block_t {
-  background-color: teal;
+  background-color: yellow;
 }
 
 .block_o, .block_i, .block_s, .block_z, .block_j, .block_l, .block_t {

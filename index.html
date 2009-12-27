@@ -19,22 +19,25 @@
 <![endif]-->
 
 <div id="blox_container">
-  <table id="blox"></table>
-  
-  <div id="stats">
-    <div id="score">0</div>
-    <div id="level">Level <span>0</span></div>
+  <div id="leaderboard">
+    <h2>Leaderboard</h2>
   </div>
   
-  <input id="start_button" name="start_button" type="button" value="Start" />
+  <table id="blox"></table>
   
-  <div id="controls">
-    <div id="directional">
-      <img src="buttons/asd.png" alt="ASD Directional-Pad" />
-      <img src="buttons/arrows.png" alt="Arrows Directional-Pad" />
+  <div id="misc">
+    <ul id="stats">
+      <li>score <span id="score">0</span></li>
+      <li>lines <span id="lines">0</span></li>
+      <li>level <span id="level">0</li>
+    </ul>
+  
+    <input id="start_button" name="start_button" type="button" value="Start" />
+  
+    <div id="controls">
+      <img src="buttons/space.png" alt="Rotate" />
+      <img src="buttons/p.png" alt="Pause" />
     </div>
-    <img src="buttons/space.png" alt="Rotate" />
-    <img src="buttons/p.png" alt="Pause" />
   </div>
   
   <div class="info">

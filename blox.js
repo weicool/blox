@@ -34,7 +34,8 @@ Blox.Game = Class.create({
     
     /* stats setup */
     this.scoreContainer = $("score");
-    this.levelContainer = $$("#level span")[0];
+    this.linesContainer = $("lines");
+    this.levelContainer = $("level");
     
     Event.observe(document, "keydown", this.move.bind(this));
     Event.observe(document, "keyup", this.stopMoveFast.bind(this));
@@ -237,48 +238,61 @@ Blox.Game = Class.create({
    * Clears as many rows as possible.
    */
   clear: function() {
+    var numRowsCleared = 0;
     /* Determine which rows to clear. */
     for (var y = this.boardLength - 1; y >= 0;) {
       if (this.rowClearable(y)) {
         this.clearRow(y);
         this.shiftDownFrom(y - 1);
+        numRowsCleared++;
       } else {
         y--;
       }
     }
+    
+    this.updateStats(numRowsCleared)
   },
   
   clearRow: function(rowIndex) {
     var row = this.board[rowIndex];
     var cell, block;
-    
-    // assert(this.rowClearable(rowIndex), "Row " + rowIndex + " not clearable.");  // DEBUGGING
 
     for (var x = 0; x < this.boardWidth; x++) {
       cell = row[x];
       block = cell.block;
       block.unmarkCell(cell);
     }
-    
-    //this.soundClear.Play();
-    this.updateStats();
   },
   
   /**
    * Called whenever a row is cleared to update game stats.
    */
-  updateStats: function() {
-    this.score++;
+  updateStats: function(numRowsCleared) {
+    if (numRowsCleared == 0) return;
+    
+    console.log(numRowsCleared);
+    
+    switch (numRowsCleared) {
+      case 4:   this.score += 10; break;
+      case 3:   this.score += 5; break;
+      default:  this.score += 1;
+    }
     this.scoreContainer.innerHTML = this.score;
-    if ((this.score % 10) == 0) {
+    
+    var oldLines = this.lines;
+    this.lines += numRowsCleared;
+    this.linesContainer.innerHTML = this.lines;
+    
+    if ((this.lines % 10) < (oldLines % 10)) {
       this.level++;
+      this.levelContainer.innerHTML = this.level;
       
       /* increase speed */
       var speedIncrease = 0;
       if (this.speed > 200) {
         speedIncrease = 20;
       } else if (this.speed > 100) {
-        speedIncrease = 4;
+        speedIncrease = 5;
       } else if (this.speed > 5) {
         speedIncrease = 2;
       }
@@ -286,13 +300,14 @@ Blox.Game = Class.create({
       
       this.stopTick();
       this.startTick();
-      this.levelContainer.innerHTML = this.level;
     }
   },
   
   resetStats: function() {
     this.score = 0;
     this.scoreContainer.innerHTML = this.score;
+    this.lines = 0;
+    this.linesContainer.innerHTML = this.lines;
     this.level = 0;
     this.levelContainer.innerHTML = this.level;
   },
@@ -400,8 +415,6 @@ Blox.Block = Class.create({
    * Must first confirm canMarkCell(). 
    */
   markCell: function(cell) {
-    // assert(Blox.game.canMarkCell(cell.y, cell.x), "Cell at Y: " + cell.y + ", X: " + cell.x + " cannot be marked!");
-
     cell.mark(this);
     return cell;
   },
@@ -442,7 +455,7 @@ Blox.Block = Class.create({
   /**
    * Returns a list of new positions resulting from shifting current cells.
    */
-  shiftBy: function (shiftY, shiftX) {
+  shiftBy: function(shiftY, shiftX) {
     var newPositions = [];
     for (var i = 0; i < this.cells.length; i++) {
       newPositions[newPositions.length] = {
