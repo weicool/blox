@@ -25,7 +25,7 @@ Blox.Game = Class.create({
     this.setUpBoard();
     
     /* game setup */
-    this.speed = Blox.Speeds.medium;
+    this.speed = Blox.Speeds.slow;
     this.state = Blox.States.new_game;
     
     this.moveFastInterval = null;
@@ -71,7 +71,7 @@ Blox.Game = Class.create({
       switch (this.state) {
         case Blox.States.new_block:
           var block = this.newBlock();
-          if (this.canFitBlock(block.cells)) {
+          if (this.canFitBlock(block)) {
             this.activeBlock = block;
             this.activeBlock.setUp();
             this.state = Blox.States.moving;
@@ -205,11 +205,12 @@ Blox.Game = Class.create({
   /**
    * Is it possible to fit a block with the given cell positions?
    */
-  canFitBlock: function(positions) {
+  canFitBlock: function(block) {
+    var positions = block.positions;
     var pos;
     for (var i = 0; i < positions.length; i++) {
       pos = positions[i];
-      if (!this.canMarkCell(pos.y, pos.x)) {
+      if (!this.canMarkCell(block.centerY + pos.y, block.centerX + pos.x)) {
         return false;
       }
     }
@@ -269,8 +270,6 @@ Blox.Game = Class.create({
    */
   updateStats: function(numRowsCleared) {
     if (numRowsCleared == 0) return;
-    
-    console.log(numRowsCleared);
     
     switch (numRowsCleared) {
       case 4:   this.score += 10; break;
@@ -393,20 +392,22 @@ Blox.Cell = Class.create({
 /** Blocks */
 Blox.Block = Class.create({
   
-  initialize: function(positions) {
-    this.cells = positions;
+  initialize: function(positions, y, x) {
+    this.cells = this.positions = positions;
+    this.centerY = y;
+    this.centerX = x;
   },
   
   /**
    * Positions this Block on the board.
    */
   setUp: function() {
-    var positions = this.cells;
     this.cells = [];
-    var pos;
-    for (var i = 0; i < positions.length; i++) {
-      pos = positions[i];
-      this.cells[this.cells.length] = this.markCell(Blox.game.board[pos.y][pos.x]);
+    var pos, cell;
+    for (var i = 0; i < this.positions.length; i++) {
+      pos = this.positions[i];
+      cell = Blox.game.board[this.centerY + pos.y][this.centerX + pos.x]
+      this.cells[this.cells.length] = this.markCell(cell);
     }
   },
   
@@ -515,326 +516,96 @@ Blox.Block = Class.create({
   
   /***** Rotation *****/
   
-  rotate: function() {}
+  rotate: function() {
+    var newPositions = [];
+    for (var i = 0; i < this.positions.length; i++) {
+      this.positions[i] = { "y": -this.positions[i].x, "x": this.positions[i].y }
+      newPositions[newPositions.length] = { "y": this.cells[0].y + this.positions[i].y, "x": this.cells[0].x + this.positions[i].x }
+    }
+
+    if (this.canMoveTo(newPositions)) {
+      this.moveTo(newPositions);
+    }
+  }
   
 });
 
 Blox.O = Class.create(Blox.Block, {
   
-  initialize: function($super, y, x) {
+  initialize: function($super, initY, initX) {
     this.cellClass = "block_o";
-    $super([
-      { "y": y, "x": x },
-      { "y": y, "x": x + 1 },
-      { "y": y + 1, "x": x },
-      { "y": y + 1, "x": x + 1 }
-    ]);
-  }
+    $super([{ y: 0, x: 0 }, { y: 0, x: 1 }, { y: 1, x: 0 }, { y: 1, x: 1 }],
+      initY, initX);
+  },
+  
+  rotate: function() {}
   
 });
 
 Blox.I = Class.create(Blox.Block, {
   
-  initialize: function($super, y, x) {
+  initialize: function($super, initY, initX) {
     this.cellClass = "block_i";
     this.state = Blox.BlockPointingDir.horizontal;
-    $super([
-      { "y": y, "x": x - 2 },
-      { "y": y, "x": x - 1 },
-      { "y": y, "x": x },
-      { "y": y, "x": x + 1 }
-    ]);
+    $super([{ y: 0, x: 0 }, { y: 0, x: -2 }, { y: 0, x: -1 }, { y: 0, x: 1 }],
+      initY, initX);
   },
-  
-  rotate: function() {
-    var newPositions, newState;
-    if (this.state == Blox.BlockPointingDir.vertical) {
-      newPositions = [
-        { "y": this.cells[0].y + 2, "x": this.cells[0].x - 2 },
-        { "y": this.cells[1].y + 1, "x": this.cells[1].x - 1 },
-        { "y": this.cells[2].y, "x": this.cells[2].x },
-        { "y": this.cells[3].y - 1, "x": this.cells[3].x + 1 }
-      ];
-      newState = Blox.BlockPointingDir.horizontal;
-    } else {
-      newPositions = [
-        { "y": this.cells[0].y - 2, "x": this.cells[0].x + 2 },
-        { "y": this.cells[1].y - 1, "x": this.cells[1].x + 1 },
-        { "y": this.cells[2].y, "x": this.cells[2].x },
-        { "y": this.cells[3].y + 1, "x": this.cells[3].x - 1 }
-      ];
-      newState = Blox.BlockPointingDir.vertical;
-    }
-    
-    if (this.canMoveTo(newPositions)) {
-      this.moveTo(newPositions);
-      this.state = newState;
-    }
-  }
   
 });
 
 Blox.S = Class.create(Blox.Block, {
   
-  initialize: function($super, y, x) {
+  initialize: function($super, initY, initX) {
     this.cellClass = "block_s";
     this.state = Blox.BlockPointingDir.horizontal;
-    $super([
-      { "y": y + 1, "x": x - 1 },
-      { "y": y, "x": x },
-      { "y": y + 1, "x": x },
-      { "y": y, "x": x + 1 }
-    ]);
+    $super([{ y: 0, x: 0 }, { y: 1, x: -1 }, { y: 1, x: 0 }, { y: 0, x: 1 }],
+      initY, initX);
   },
-  
-  rotate: function() {
-    var newPositions, newState;
-    if (this.state == Blox.BlockPointingDir.vertical) {
-      newPositions = [
-        { "y": this.cells[0].y + 1, "x": this.cells[0].x - 1 },
-        { "y": this.cells[1].y - 1, "x": this.cells[1].x - 1 },
-        { "y": this.cells[2].y, "x": this.cells[2].x },
-        { "y": this.cells[3].y - 2, "x": this.cells[3].x }
-      ];
-      newState = Blox.BlockPointingDir.horizontal;
-    } else {
-      newPositions = [
-        { "y": this.cells[0].y - 1, "x": this.cells[0].x + 1 },
-        { "y": this.cells[1].y + 1, "x": this.cells[1].x + 1 },
-        { "y": this.cells[2].y, "x": this.cells[2].x },
-        { "y": this.cells[3].y + 2, "x": this.cells[3].x }
-      ];
-      newState = Blox.BlockPointingDir.vertical;
-    }
-    
-    if (this.canMoveTo(newPositions)) {
-      this.moveTo(newPositions);
-      this.state = newState;
-    }
-  }
   
 });
 
 Blox.Z = Class.create(Blox.Block, {
   
-  initialize: function($super, y, x) {
+  initialize: function($super, initY, initX) {
     this.cellClass = "block_z";
     this.state = Blox.BlockPointingDir.horizontal;
-    $super([
-      { "y": y, "x": x - 1 },
-      { "y": y, "x": x },
-      { "y": y + 1, "x": x },
-      { "y": y + 1, "x": x + 1 }
-    ]);
+    $super([{ y: 0, x: 0 }, { y: 0, x: -1 }, { y: 1, x: 0 }, { y: 1, x: 1 }],
+      initY, initX);
   },
-  
-  rotate: function() {
-    var newPositions, newState;
-    if (this.state == Blox.BlockPointingDir.vertical) {
-      newPositions = [
-        { "y": this.cells[0].y, "x": this.cells[0].x - 2 },
-        { "y": this.cells[1].y - 1, "x": this.cells[1].x - 1 },
-        { "y": this.cells[2].y, "x": this.cells[2].x },
-        { "y": this.cells[3].y - 1, "x": this.cells[3].x + 1 }
-      ];
-      newState = Blox.BlockPointingDir.horizontal;
-    } else {
-      newPositions = [
-        { "y": this.cells[0].y, "x": this.cells[0].x + 2 },
-        { "y": this.cells[1].y + 1, "x": this.cells[1].x + 1 },
-        { "y": this.cells[2].y, "x": this.cells[2].x },
-        { "y": this.cells[3].y + 1, "x": this.cells[3].x - 1 }
-      ];
-      newState = Blox.BlockPointingDir.vertical;
-    }
-    
-    if (this.canMoveTo(newPositions)) {
-      this.moveTo(newPositions);
-      this.state = newState;
-    }
-  }
   
 });
 
 Blox.T = Class.create(Blox.Block, {
   
-  initialize: function($super, y, x) {
+  initialize: function($super, initY, initX) {
     this.cellClass = "block_t";
     this.state = Blox.BlockPointingDir.south;
-    $super([
-      { "y": y, "x": x - 1 },
-      { "y": y, "x": x },
-      { "y": y, "x": x + 1 },
-      { "y": y + 1, "x": x }
-    ]);
+    $super([{ y: 0, x: 0 }, { y: 0, x: -1 }, { y: 0, x: 1 }, { y: 1, x: 0 }],
+      initY, initX);
   },
-  
-  rotate: function() {
-    var newState;
-    var newPositions = [
-        { "y": this.cells[0].y, "x": this.cells[0].x },
-        { "y": this.cells[1].y, "x": this.cells[1].x },
-        { "y": this.cells[2].y, "x": this.cells[2].x },
-        { "y": this.cells[3].y, "x": this.cells[3].x }
-    ];
-    
-    switch (this.state) {
-      case Blox.BlockPointingDir.south:
-        newPositions[2] = { "y": this.cells[2].y - 1, "x": this.cells[2].x - 1 };
-        newState = Blox.BlockPointingDir.west;
-        break;
-      case Blox.BlockPointingDir.west:
-        newPositions[3] = { "y": this.cells[3].y - 1, "x": this.cells[3].x + 1 };
-        newState = Blox.BlockPointingDir.north;
-        break;
-      case Blox.BlockPointingDir.north:
-        newPositions[0] = { "y": this.cells[0].y + 1, "x": this.cells[0].x + 1 };
-        newState = Blox.BlockPointingDir.east;
-        break;
-      default:    /* east */
-        /* move cells back to their original slots */
-        newPositions = [
-          { "y": this.cells[2].y + 1, "x": this.cells[2].x - 1 },
-          { "y": this.cells[1].y, "x": this.cells[1].x },
-          { "y": this.cells[3].y, "x": this.cells[3].x },
-          { "y": this.cells[0].y, "x": this.cells[0].x }
-        ];
-        newState = Blox.BlockPointingDir.south;
-        break;
-    }
-    
-    if (this.canMoveTo(newPositions)) {
-      this.moveTo(newPositions);
-      this.state = newState;
-    }
-  }
   
 });
 
 Blox.J = Class.create(Blox.Block, {
   
-  initialize: function($super, y, x) {
+  initialize: function($super, initY, initX) {
     this.cellClass = "block_j";
     this.state = Blox.BlockPointingDir.west;
-    $super([
-      { "y": y, "x": x - 1 },
-      { "y": y, "x": x },
-      { "y": y, "x": x + 1 },
-      { "y": y + 1, "x": x + 1 }
-    ]);
+    $super([{ y: 0, x: 0 }, { y: 0, x: -1 }, { y: 0, x: 1 }, { y: 1, x: 1 }],
+      initY, initX);
   },
-  
-  rotate: function() {
-    var newPositions, newState;
-    
-    switch (this.state) {
-      case Blox.BlockPointingDir.west:
-        newPositions = [
-          { "y": this.cells[0].y - 1, "x": this.cells[0].x + 1 },
-          { "y": this.cells[1].y, "x": this.cells[1].x },
-          { "y": this.cells[2].y + 1, "x": this.cells[2].x - 1 },
-          { "y": this.cells[3].y, "x": this.cells[3].x - 2 }
-        ];
-        newState = Blox.BlockPointingDir.north;
-        break;
-      case Blox.BlockPointingDir.north:
-        newPositions = [
-          { "y": this.cells[0].y + 1, "x": this.cells[0].x + 1 },
-          { "y": this.cells[1].y, "x": this.cells[1].x },
-          { "y": this.cells[2].y - 1, "x": this.cells[2].x - 1 },
-          { "y": this.cells[3].y - 2, "x": this.cells[3].x }
-        ];
-        newState = Blox.BlockPointingDir.east;
-        break;
-      case Blox.BlockPointingDir.east:
-        newPositions = [
-          { "y": this.cells[0].y + 1, "x": this.cells[0].x - 1 },
-          { "y": this.cells[1].y, "x": this.cells[1].x },
-          { "y": this.cells[2].y - 1, "x": this.cells[2].x + 1 },
-          { "y": this.cells[3].y, "x": this.cells[3].x + 2 }
-        ];
-        newState = Blox.BlockPointingDir.south;        
-        break;
-      default:    /* south */
-        newPositions = [
-          { "y": this.cells[0].y - 1, "x": this.cells[0].x - 1 },
-          { "y": this.cells[1].y, "x": this.cells[1].x },
-          { "y": this.cells[2].y + 1, "x": this.cells[2].x + 1 },
-          { "y": this.cells[3].y + 2, "x": this.cells[3].x }
-        ];
-        newState = Blox.BlockPointingDir.west;
-        break;
-    }
-    
-    if (this.canMoveTo(newPositions)) {
-      this.moveTo(newPositions);
-      this.state = newState;
-    }
-  }
   
 });
 
 Blox.L = Class.create(Blox.Block, {
   
-  initialize: function($super, y, x) {
+  initialize: function($super, initY, initX) {
     this.cellClass = "block_l";
     this.state = Blox.BlockPointingDir.east;
-    $super([
-      { "y": y, "x": x + 1 },
-      { "y": y, "x": x },
-      { "y": y, "x": x - 1 },
-      { "y": y + 1, "x": x - 1 }
-    ]);
+    $super([{ y: 0, x: 0 }, { y: 0, x: 1 }, { y: 0, x: -1 }, { y: 1, x: -1 }],
+      initY, initX);
   },
-  
-  rotate: function() {
-    var newPositions, newState;
-    
-    switch (this.state) {
-      case Blox.BlockPointingDir.west:
-        newPositions = [
-          { "y": this.cells[0].y - 1, "x": this.cells[0].x + 1 },
-          { "y": this.cells[1].y, "x": this.cells[1].x },
-          { "y": this.cells[2].y + 1, "x": this.cells[2].x - 1 },
-          { "y": this.cells[3].y + 2, "x": this.cells[3].x }
-        ];
-        newState = Blox.BlockPointingDir.north;
-        break;
-      case Blox.BlockPointingDir.north:
-        newPositions = [
-          { "y": this.cells[0].y + 1, "x": this.cells[0].x + 1 },
-          { "y": this.cells[1].y, "x": this.cells[1].x },
-          { "y": this.cells[2].y - 1, "x": this.cells[2].x - 1 },
-          { "y": this.cells[3].y, "x": this.cells[3].x - 2 }
-        ];
-        newState = Blox.BlockPointingDir.east;
-        break;
-      case Blox.BlockPointingDir.east:
-        newPositions = [
-          { "y": this.cells[0].y + 1, "x": this.cells[0].x - 1 },
-          { "y": this.cells[1].y, "x": this.cells[1].x },
-          { "y": this.cells[2].y - 1, "x": this.cells[2].x + 1 },
-          { "y": this.cells[3].y - 2, "x": this.cells[3].x }
-        ];
-        newState = Blox.BlockPointingDir.south;        
-        break;
-      default:    /* south */
-        newPositions = [
-          { "y": this.cells[0].y - 1, "x": this.cells[0].x - 1 },
-          { "y": this.cells[1].y, "x": this.cells[1].x },
-          { "y": this.cells[2].y + 1, "x": this.cells[2].x + 1 },
-          { "y": this.cells[3].y, "x": this.cells[3].x + 2 }
-        ];
-        newState = Blox.BlockPointingDir.west;
-        break;
-    }
-    
-    if (this.canMoveTo(newPositions)) {
-      this.moveTo(newPositions);
-      this.state = newState;
-    }
-  }
-  
+
 });
 
 Blox.BlockTypes = [Blox.O, Blox.I, Blox.S, Blox.Z, Blox.T, Blox.J, Blox.L];
