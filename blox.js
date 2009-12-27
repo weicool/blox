@@ -11,8 +11,6 @@ Blox.Keys = { down: 83, down_alt: 40, left: 65, left_alt: 37, right: 68, right_a
 
 Blox.States = { game_over: -1, paused: 0, new_game: 1, new_block: 2, moving: 3 };
 
-Blox.BlockPointingDir = { horizontal: 0, vertical: 1, north: 2, south: 3, east: 4, west: 5 };
-
 Blox.Dir = { left: 1, down: 2, right: 3 };
 
 Blox.Game = Class.create({
@@ -392,10 +390,12 @@ Blox.Cell = Class.create({
 /** Blocks */
 Blox.Block = Class.create({
   
-  initialize: function(positions, y, x) {
-    this.cells = this.positions = positions;
-    this.centerY = y;
-    this.centerX = x;
+  initialize: function(positions, initY, initX) {
+    this.cells = [];
+    this.positions = positions;
+    this.centerY = initY;
+    this.centerX = initX;
+    this.clockwise = true;
   },
   
   /**
@@ -412,8 +412,7 @@ Blox.Block = Class.create({
   },
   
   /** 
-   * Marks the given cell at the given coordinates. 
-   * Must first confirm canMarkCell(). 
+   * Marks the given cell at the given coordinates. Must first confirm canMarkCell(). 
    */
   markCell: function(cell) {
     cell.mark(this);
@@ -431,8 +430,7 @@ Blox.Block = Class.create({
   /***** Moving *****/
   
   /** 
-   * Moves in the direction implied by the method name. 
-   * Must first confirm canMove{DIR}(). 
+   * Moves in the direction implied by the method name.
    */
   moveDown: function () { if (this.canMoveDown()) this.moveTo(this.shiftBy(1, 0)); },
   moveLeft: function () { if (this.canMoveLeft()) this.moveTo(this.shiftBy(0, -1)); },
@@ -460,8 +458,8 @@ Blox.Block = Class.create({
     var newPositions = [];
     for (var i = 0; i < this.cells.length; i++) {
       newPositions[newPositions.length] = {
-        "y": this.cells[i].y + shiftY,
-        "x": this.cells[i].x + shiftX
+        y: this.cells[i].y + shiftY,
+        x: this.cells[i].x + shiftX
       };
     }
     return newPositions;
@@ -518,9 +516,18 @@ Blox.Block = Class.create({
   
   rotate: function() {
     var newPositions = [];
+    var pos;
     for (var i = 0; i < this.positions.length; i++) {
-      this.positions[i] = { "y": -this.positions[i].x, "x": this.positions[i].y }
-      newPositions[newPositions.length] = { "y": this.cells[0].y + this.positions[i].y, "x": this.cells[0].x + this.positions[i].x }
+      pos = this.positions[i];
+      if (this.clockwise) {
+        this.positions[i] = { y: -pos.x, x:  pos.y }
+      } else {
+        this.positions[i] = { y:  pos.x, x: -pos.y }
+      }
+      newPositions[newPositions.length] = { 
+        y: this.cells[0].y + pos.y, 
+        x: this.cells[0].x + pos.x
+      }
     }
 
     if (this.canMoveTo(newPositions)) {
@@ -534,8 +541,7 @@ Blox.O = Class.create(Blox.Block, {
   
   initialize: function($super, initY, initX) {
     this.cellClass = "block_o";
-    $super([{ y: 0, x: 0 }, { y: 0, x: 1 }, { y: 1, x: 0 }, { y: 1, x: 1 }],
-      initY, initX);
+    $super([{ y: 0, x: 0 }, { y: 0, x: 1 }, { y: 1, x: 0 }, { y: 1, x: 1 }], initY, initX);
   },
   
   rotate: function() {}
@@ -546,10 +552,13 @@ Blox.I = Class.create(Blox.Block, {
   
   initialize: function($super, initY, initX) {
     this.cellClass = "block_i";
-    this.state = Blox.BlockPointingDir.horizontal;
-    $super([{ y: 0, x: 0 }, { y: 0, x: -2 }, { y: 0, x: -1 }, { y: 0, x: 1 }],
-      initY, initX);
+    $super([{ y: 0, x: 0 }, { y: 0, x: -2 }, { y: 0, x: -1 }, { y: 0, x: 1 }], initY, initX);
   },
+  
+  rotate: function($super) {
+    $super();
+    this.clockwise = !this.clockwise;
+  }
   
 });
 
@@ -557,10 +566,13 @@ Blox.S = Class.create(Blox.Block, {
   
   initialize: function($super, initY, initX) {
     this.cellClass = "block_s";
-    this.state = Blox.BlockPointingDir.horizontal;
-    $super([{ y: 0, x: 0 }, { y: 1, x: -1 }, { y: 1, x: 0 }, { y: 0, x: 1 }],
-      initY, initX);
+    $super([{ y: 0, x: 0 }, { y: 1, x: -1 }, { y: 1, x: 0 }, { y: 0, x: 1 }], initY, initX);
   },
+  
+  rotate: function($super) {
+    $super();
+    this.clockwise = !this.clockwise;
+  }
   
 });
 
@@ -568,10 +580,13 @@ Blox.Z = Class.create(Blox.Block, {
   
   initialize: function($super, initY, initX) {
     this.cellClass = "block_z";
-    this.state = Blox.BlockPointingDir.horizontal;
-    $super([{ y: 0, x: 0 }, { y: 0, x: -1 }, { y: 1, x: 0 }, { y: 1, x: 1 }],
-      initY, initX);
+    $super([{ y: 0, x: 0 }, { y: 0, x: -1 }, { y: 1, x: 0 }, { y: 1, x: 1 }], initY, initX);
   },
+  
+  rotate: function($super) {
+    $super();
+    this.clockwise = !this.clockwise;
+  }
   
 });
 
@@ -579,9 +594,7 @@ Blox.T = Class.create(Blox.Block, {
   
   initialize: function($super, initY, initX) {
     this.cellClass = "block_t";
-    this.state = Blox.BlockPointingDir.south;
-    $super([{ y: 0, x: 0 }, { y: 0, x: -1 }, { y: 0, x: 1 }, { y: 1, x: 0 }],
-      initY, initX);
+    $super([{ y: 0, x: 0 }, { y: 0, x: -1 }, { y: 0, x: 1 }, { y: 1, x: 0 }], initY, initX);
   },
   
 });
@@ -590,9 +603,8 @@ Blox.J = Class.create(Blox.Block, {
   
   initialize: function($super, initY, initX) {
     this.cellClass = "block_j";
-    this.state = Blox.BlockPointingDir.west;
-    $super([{ y: 0, x: 0 }, { y: 0, x: -1 }, { y: 0, x: 1 }, { y: 1, x: 1 }],
-      initY, initX);
+    $super([{ y: 0, x: 0 }, { y: 0, x: -1 }, { y: 0, x: 1 }, { y: 1, x: 1 }], initY, initX);
+    this.clockwise = false;
   },
   
 });
@@ -601,9 +613,8 @@ Blox.L = Class.create(Blox.Block, {
   
   initialize: function($super, initY, initX) {
     this.cellClass = "block_l";
-    this.state = Blox.BlockPointingDir.east;
-    $super([{ y: 0, x: 0 }, { y: 0, x: 1 }, { y: 0, x: -1 }, { y: 1, x: -1 }],
-      initY, initX);
+    $super([{ y: 0, x: 0 }, { y: 0, x: 1 }, { y: 0, x: -1 }, { y: 1, x: -1 }], initY, initX);
+    this.clockwise = false;
   },
 
 });
