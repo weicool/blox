@@ -18,10 +18,8 @@ Blox.Game = Class.create({
   
   initialize: function() {
     /* board setup */
-    this.boardContainer = $("blox");
-    this.boardWidth = 10;
-    this.boardLength = 20;
-    this.setUpBoard();
+    this.board = new Blox.Board(this, $("blox"), 10, 20);
+    this.board.setUp();
     
     /* game setup */
     this.speed = Blox.Speeds.slow;
@@ -51,7 +49,7 @@ Blox.Game = Class.create({
   
   start: function() {
     this.state = Blox.States.new_block;
-    this.clearBoard();
+    this.board.clearBoard();
     this.resetStats();
     this.startTick();
   },
@@ -73,7 +71,7 @@ Blox.Game = Class.create({
       switch (this.state) {
         case Blox.States.new_block:
           var block = this.newBlock();
-          if (this.canFitBlock(block)) {
+          if (this.board.canFitBlock(block)) {
             this.activeBlock = block;
             this.activeBlock.setUp();
             this.state = Blox.States.moving;
@@ -86,7 +84,7 @@ Blox.Game = Class.create({
           if (this.activeBlock.canMoveDown()) {
             this.activeBlock.moveDown();
           } else {
-            this.clear();
+            this.board.clear();
             this.state = Blox.States.new_block;
             continue;
           }
@@ -176,103 +174,15 @@ Blox.Game = Class.create({
     this.moveFastDir = null;
   },
   
-  setUpBoard: function() {
-    this.board = [];
-    var row, col;
-    for (var y = 0; y < this.boardLength; y++) {
-      row = new Element("tr");
-      this.board[y] = new Array();
-      for (var x = 0; x < this.boardWidth; x++) {
-        col = new Element("td");
-        row.appendChild(col);
-        this.board[y][x] = new Blox.Cell(y, x, col);
-      }
-      this.boardContainer.appendChild(row);
-    }
-  },
-  
-  clearBoard: function() {
-    var row;
-    for (var y = 0; y < this.boardLength; y++) {
-      row = this.board[y];
-      for (var x = 0; x < this.boardWidth; x++) {
-        row[x].unmark();
-      }
-    }
-  },
-  
   /**
    * Generates a new, random block.
    */
   newBlock: function() {
     var y = 0;
-    var x = Math.floor(this.boardWidth / 2) - 1;
+    var x = Math.floor(this.board.width / 2) - 1;
     var i = Math.round(Math.random() * (Blox.BlockTypes.length - 1));
     var block = new Blox.BlockTypes[i](y, x);
     return block;
-  },
-  
-  /**
-   * Is it possible to fit a block with the given cell positions?
-   */
-  canFitBlock: function(block) {
-    var positions = block.positions;
-    var pos;
-    for (var i = 0; i < positions.length; i++) {
-      pos = positions[i];
-      if (!this.canMarkCell(block.centerY + pos.y, block.centerX + pos.x)) {
-        return false;
-      }
-    }
-    return true;
-  },
-  
-  /** 
-   * Is it possible to mark the cell at the given coordinates? 
-   */
-  canMarkCell: function(y, x) {
-    if (!this.isValidCell(y, x)) {
-      return false;
-    }
-    var cell = this.board[y][x];
-    return !cell.isOccupied();
-  },
-  
-  isValidCell: function(y, x) {
-    return (y < this.boardLength) && (x < this.boardWidth) &&
-           (y >= 0) && (x >= 0);
-  },
-  
-  /***** Clearing *****/
-  
-  /**
-   * Clears as many rows as possible.
-   */
-  clear: function() {
-    var numRowsCleared = 0;
-    /* Determine which rows to clear. */
-    for (var y = this.boardLength - 1; y >= 0;) {
-      if (this.rowClearable(y)) {
-        this.clearRow(y);
-        this.shiftDownFrom(y - 1);
-        numRowsCleared++;
-      } else {
-        y--;
-      }
-    }
-    
-    this.updateStats(numRowsCleared)
-  },
-  
-  clearRow: function(rowIndex) {
-    var row = this.board[rowIndex];
-    var cell, block;
-
-    for (var x = 0; x < this.boardWidth; x++) {
-      cell = row[x];
-      block = cell.block;
-      block.unmarkCell(cell);
-    }
   },
   
   /**
@@ -321,57 +231,6 @@ Blox.Game = Class.create({
     this.levelContainer.innerHTML = this.level;
   },
   
-  /**
-   * Shifts rows down starting from the row at the given index.
-   */
-  shiftDownFrom: function(rowIndex) {
-    for (var y = rowIndex; y >= 0; y--) {
-      this.shiftDown(y);
-    }
-  },
-  
-  /**
-   * Shifts down each unit on the row at the given row index.
-   */
-  shiftDown: function(rowIndex) {
-    var row = this.board[rowIndex];
-    var cell, block;
-    for (var x = 0; x < this.boardWidth; x++) {
-      cell = row[x];
-      if (cell.isOccupied() && this.canMarkCell(cell.y + 1, cell.x)) {
-        block = cell.block;
-        block.moveDownUnit(cell);
-      }
-    }
-  },
-  
-  /**
-   * Returns true if the row at the given row index is clearable.
-   * That is, all columns are occupied.
-   */
-  rowClearable: function(rowIndex) {
-    var row = this.board[rowIndex];
-    for (var x = 0; x < this.boardWidth; x++) {
-      if (!row[x].isOccupied()) {
-        return false;
-      }
-    }
-    return true;
-  },
-  
-  /**
-   * Returns true if the row at the given row index is empty.
-   */
-  rowEmpty: function(rowIndex) {
-    var row = this.board[rowIndex];
-    for (var x = 0; x < this.boardWidth; x++) {
-      if (row[x].isOccupied()) {
-        return false;
-      }
-    }
-    return true;
-  },
-  
   flipControls: function() {
     var rotateControl = $$("#controls strong")[0];
     var dropControl = $$("#controls strong")[1];
@@ -393,6 +252,155 @@ Blox.Game = Class.create({
     }
   }
   
+});
+
+Blox.Board = Class.create({
+  
+  initialize: function(game, container, width, length) {
+    this.game = game;
+    this.container = container;
+    this.width = width;
+    this.length = length;
+  },
+  
+  setUp: function() {
+    this.board = [];
+    var row, col;
+    for (var y = 0; y < this.length; y++) {
+      row = new Element("tr");
+      this.board[y] = new Array();
+      for (var x = 0; x < this.width; x++) {
+        col = new Element("td");
+        row.appendChild(col);
+        this.board[y][x] = new Blox.Cell(y, x, col);
+      }
+      this.container.appendChild(row);
+    }
+  },
+  
+  clearBoard: function() {
+    var row;
+    for (var y = 0; y < this.length; y++) {
+      row = this.board[y];
+      for (var x = 0; x < this.width; x++) {
+        row[x].unmark();
+      }
+    }
+  },
+  
+  /**
+   * Is it possible to fit a block with the given cell positions?
+   */
+  canFitBlock: function(block) {
+    var positions = block.positions;
+    var pos;
+    for (var i = 0; i < positions.length; i++) {
+      pos = positions[i];
+      if (!this.canMarkCell(block.centerY + pos.y, block.centerX + pos.x)) {
+        return false;
+      }
+    }
+    return true;
+  },
+  
+  /** 
+   * Is it possible to mark the cell at the given coordinates? 
+   */
+  canMarkCell: function(y, x) {
+    if (!this.isValidCell(y, x)) {
+      return false;
+    }
+    var cell = this.board[y][x];
+    return !cell.isOccupied();
+  },
+  
+  isValidCell: function(y, x) {
+    return (y < this.length) && (x < this.width) && (y >= 0) && (x >= 0);
+  },
+  
+  /***** Clearing *****/
+  
+  /**
+   * Clears as many rows as possible.
+   */
+  clear: function() {
+    var numRowsCleared = 0;
+    /* Determine which rows to clear. */
+    for (var y = this.length - 1; y >= 0;) {
+      if (this.rowClearable(y)) {
+        this.clearRow(y);
+        this.shiftDownFrom(y - 1);
+        numRowsCleared++;
+      } else {
+        y--;
+      }
+    }
+    
+    this.game.updateStats(numRowsCleared);
+  },
+  
+  clearRow: function(rowIndex) {
+    var row = this.board[rowIndex];
+    var cell, block;
+
+    for (var x = 0; x < this.width; x++) {
+      cell = row[x];
+      block = cell.block;
+      block.unmarkCell(cell);
+    }
+  },
+  
+  /**
+   * Shifts rows down starting from the row at the given index.
+   */
+  shiftDownFrom: function(rowIndex) {
+    for (var y = rowIndex; y >= 0; y--) {
+      this.shiftDown(y);
+    }
+  },
+  
+  /**
+   * Shifts down each unit on the row at the given row index.
+   */
+  shiftDown: function(rowIndex) {
+    var row = this.board[rowIndex];
+    var cell, block;
+    for (var x = 0; x < this.width; x++) {
+      cell = row[x];
+      if (cell.isOccupied() && this.canMarkCell(cell.y + 1, cell.x)) {
+        block = cell.block;
+        block.moveDownUnit(cell);
+      }
+    }
+  },
+  
+  /**
+   * Returns true if the row at the given row index is clearable.
+   * That is, all columns are occupied.
+   */
+  rowClearable: function(rowIndex) {
+    var row = this.board[rowIndex];
+    for (var x = 0; x < this.width; x++) {
+      if (!row[x].isOccupied()) {
+        return false;
+      }
+    }
+    return true;
+  },
+  
+  /**
+   * Returns true if the row at the given row index is empty.
+   */
+  rowEmpty: function(rowIndex) {
+    var row = this.board[rowIndex];
+    for (var x = 0; x < this.width; x++) {
+      if (row[x].isOccupied()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
 });
 
 Blox.Cell = Class.create({
@@ -439,7 +447,7 @@ Blox.Block = Class.create({
     var pos, cell;
     for (var i = 0; i < this.positions.length; i++) {
       pos = this.positions[i];
-      cell = Blox.game.board[this.centerY + pos.y][this.centerX + pos.x]
+      cell = Blox.game.board.board[this.centerY + pos.y][this.centerX + pos.x];
       this.cells[this.cells.length] = this.markCell(cell);
     }
   },
@@ -482,7 +490,7 @@ Blox.Block = Class.create({
    */
   moveDownUnit: function (cell) {  
     this.unmarkCell(cell);
-    var newCell = Blox.game.board[cell.y + 1][cell.x];
+    var newCell = Blox.game.board.board[cell.y + 1][cell.x];
     this.cells[this.cells.length] = this.markCell(newCell);
   },
 
@@ -514,7 +522,7 @@ Blox.Block = Class.create({
     var newPos, cell;
     for (var i = 0; i < this.cells.length; i++) {
       newPos = newPositions[i];
-      cell = Blox.game.board[newPos.y][newPos.x];
+      cell = Blox.game.board.board[newPos.y][newPos.x];
       this.cells[i] = this.markCell(cell);
     }
   },
@@ -526,8 +534,8 @@ Blox.Block = Class.create({
       newPos = newPositions[i];
       newY = newPos.y;
       newX = newPos.x;
-      if (!Blox.game.isValidCell(newY, newX) || 
-          (!Blox.game.canMarkCell(newY, newX) && !this.contains(Blox.game.board[newY][newX]))) {
+      if (!Blox.game.board.isValidCell(newY, newX) || 
+          (!Blox.game.board.canMarkCell(newY, newX) && !this.contains(Blox.game.board.board[newY][newX]))) {
         return false;
       }
     }

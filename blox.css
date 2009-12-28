@@ -43,7 +43,7 @@ a:link, a:visited, a:active {
 
 #stats li {
   margin-bottom: 1em;
-  font-size: 0.9em;
+  font-size: 0.8em;
 }
 
 #stats li span {
@@ -60,13 +60,13 @@ a:link, a:visited, a:active {
 }
 
 #start_button {
-  margin-top: 50px;
+  margin-top: 40px;
   font-size: 2em;
 }
 
 #controls {
   position: relative;
-  margin-top: 50px;
+  margin-top: 40px;
 }
 
 #controls ul {
@@ -103,15 +103,22 @@ a:link, a:visited, a:active {
 
 /***** Game *****/
 
-#blox {
-  float: left;
+#blox, #next {
   border-collapse: collapse;
-  border: 2px solid #AAA;
-  margin: 10px;
-  background: #FBFBFB;
 }
 
-#blox td {
+#blox {
+  float: left;
+  border: 2px solid #AAA;
+  background: #FBFBFB;
+  margin: 10px;
+}
+
+#next {
+  margin-top: 0.9em;
+}
+
+#blox td, #next td {
   width: 20px;
   height: 20px;
   padding: 0;
