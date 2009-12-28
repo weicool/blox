@@ -7,7 +7,8 @@ var Blox = {};
 
 Blox.Speeds = { slow: 600, medium: 460, fast: 50 };
 
-Blox.Keys = { down: 83, down_alt: 40, left: 65, left_alt: 37, right: 68, right_alt: 39, rotate: 32, pause: 80 };
+Blox.Keys = { down: 83, down_alt: 40, left: 65, left_alt: 37, right: 68, right_alt: 39,
+  rotate: 38, rotate_alt: 87, drop: 32, drop_alt: 32, pause: 80 };
 
 Blox.States = { game_over: -1, paused: 0, new_game: 1, new_block: 2, moving: 3 };
 
@@ -37,6 +38,9 @@ Blox.Game = Class.create({
     
     Event.observe(document, "keydown", this.move.bind(this));
     Event.observe(document, "keyup", this.stopMoveFast.bind(this));
+    
+    /* controls setup */
+    $("flip_controls").observe('click', this.flipControls.bind(this));
     
     /* sounds setup */
     //this.music = $("music");
@@ -104,21 +108,29 @@ Blox.Game = Class.create({
         /* Move */
         case Blox.Keys.left:
         case Blox.Keys.left_alt:
+          if (this.moveFastDir) return;
           this.activeBlock.moveLeft();
           this.startMoveFast(this.activeBlock.moveLeft);
           break;
         case Blox.Keys.right:
         case Blox.Keys.right_alt:
+          if (this.moveFastDir) return;
           this.activeBlock.moveRight();
           this.startMoveFast(this.activeBlock.moveRight);
           break;
         case Blox.Keys.down:
         case Blox.Keys.down_alt:
+          if (this.moveFastDir) return;
           this.activeBlock.moveDown();
           this.startMoveFast(this.activeBlock.moveDown);
           break;
         case Blox.Keys.rotate:
+        case Blox.Keys.rotate_alt:
           this.activeBlock.rotate();
+          break;
+        case Blox.Keys.drop:
+        case Blox.Keys.drop_alt:
+          this.activeBlock.drop();
           break;
         /* Other game control */
         case Blox.Keys.pause:
@@ -146,7 +158,7 @@ Blox.Game = Class.create({
       this.moveFastTimeout = null;
     }
     this.moveFastDir = moveDir;
-    this.moveFastTimeout = setTimeout(this.moveFast.bind(this), 500);
+    this.moveFastTimeout = setTimeout(this.moveFast.bind(this), 400);
   },
   
   /**
@@ -358,6 +370,27 @@ Blox.Game = Class.create({
       }
     }
     return true;
+  },
+  
+  flipControls: function() {
+    var rotateControl = $$("#controls strong")[0];
+    var dropControl = $$("#controls strong")[1];
+    
+    var rotateControlText = rotateControl.innerHTML;
+    rotateControl.innerHTML = dropControl.innerHTML;
+    dropControl.innerHTML = rotateControlText;
+    
+    if (Blox.Keys.rotate == 38) {   // up arrow
+      Blox.Keys.rotate = 32;
+      Blox.Keys.rotate_alt = 32;
+      Blox.Keys.drop = 38;
+      Blox.Keys.drop_alt = 87;
+    } else {
+      Blox.Keys.rotate = 38;
+      Blox.Keys.rotate_alt = 87;
+      Blox.Keys.drop = 32;
+      Blox.Keys.drop_alt = 32;
+    }
   }
   
 });
@@ -435,6 +468,12 @@ Blox.Block = Class.create({
   moveDown: function () { if (this.canMoveDown()) this.moveTo(this.shiftBy(1, 0)); },
   moveLeft: function () { if (this.canMoveLeft()) this.moveTo(this.shiftBy(0, -1)); },
   moveRight: function () { if (this.canMoveRight()) this.moveTo(this.shiftBy(0, 1)); },
+  
+  drop: function() {
+    while (this.canMoveDown()) {
+      this.moveTo(this.shiftBy(1, 0));
+    }
+  },
   
   /**
    * Moves a single cell down.

@@ -49,6 +49,7 @@ a:link, a:visited, a:active {
 #stats li span {
   display: block;
   font-size: 2em;
+  margin-left: 5px;
 }
 
 #stats li #score {
@@ -64,7 +65,20 @@ a:link, a:visited, a:active {
 }
 
 #controls {
+  position: relative;
   margin-top: 50px;
+}
+
+#controls ul {
+  padding-left: 1.5em;
+  font-size: 0.9em;
+}
+
+#controls #flip_controls {
+  position: absolute;
+  left: 11.5em;
+  top: 0.5em;
+  cursor: pointer;
 }
 
 .sfx {
