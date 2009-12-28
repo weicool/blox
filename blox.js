@@ -197,11 +197,7 @@ Blox.Game = Class.create({
   displayNext: function() {
     this.next.clearBoard();
     var block = new this.nextBlockType(0, Math.ceil(this.next.width / 2) - 1);
-    if (this.next.canFitBlock(block)) {
-      block.setUp(this.next);
-    } else {
-      console.log("FAIL: " + block.centerY + " " + block.centerX);
-    }
+    block.setUp(this.next);
   },
   
   /**
@@ -591,8 +587,8 @@ Blox.Block = Class.create({
         this.positions[i] = { y:  pos.x, x: -pos.y }
       }
       newPositions[newPositions.length] = { 
-        y: this.cells[0].y + pos.y, 
-        x: this.cells[0].x + pos.x
+        y: this.cells[0].y + this.positions[i].y, 
+        x: this.cells[0].x + this.positions[i].x
       }
     }
 
