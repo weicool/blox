@@ -21,6 +21,10 @@ Blox.Game = Class.create({
     this.board = new Blox.Board(this, $("blox"), 10, 20);
     this.board.setUp();
     
+    this.next = new Blox.Board(this, $("next"), 5, 3);
+    this.next.setUp();
+    this.nextBlockType = null;
+    
     /* game setup */
     this.speed = Blox.Speeds.slow;
     this.state = Blox.States.new_game;
@@ -50,6 +54,7 @@ Blox.Game = Class.create({
   start: function() {
     this.state = Blox.States.new_block;
     this.board.clearBoard();
+    this.next.clearBoard();
     this.resetStats();
     this.startTick();
   },
@@ -70,13 +75,19 @@ Blox.Game = Class.create({
     while (true) {
       switch (this.state) {
         case Blox.States.new_block:
-          var block = this.newBlock();
-          if (this.board.canFitBlock(block)) {
-            this.activeBlock = block;
-            this.activeBlock.setUp();
+          var x = Math.floor(this.board.width / 2) - 1;
+          if (this.nextBlockType) {
+            this.activeBlock = new this.nextBlockType(0, x);
+          } else {
+            this.activeBlock = new (this.randomBlockType())(0, x);
+          }
+          this.generateNextBlock();
+          if (this.board.canFitBlock(this.activeBlock)) {
+            this.activeBlock.setUp(this.board);
             this.state = Blox.States.moving;
           } else {
             this.activeBlock = null;
+            this.nextBlockType = null;
             this.state = Blox.States.game_over;
           }
           break;
@@ -174,15 +185,23 @@ Blox.Game = Class.create({
     this.moveFastDir = null;
   },
   
-  /**
-   * Generates a new, random block.
-   */
-  newBlock: function() {
-    var y = 0;
-    var x = Math.floor(this.board.width / 2) - 1;
-    var i = Math.round(Math.random() * (Blox.BlockTypes.length - 1));
-    var block = new Blox.BlockTypes[i](y, x);
-    return block;
+  generateNextBlock: function() {
+    this.nextBlockType = this.randomBlockType();
+    this.displayNext();
+  },
+  
+  randomBlockType: function() {
+    return Blox.BlockTypes[Math.round(Math.random() * (Blox.BlockTypes.length - 1))];
+  },
+  
+  displayNext: function() {
+    this.next.clearBoard();
+    var block = new this.nextBlockType(0, Math.ceil(this.next.width / 2) - 1);
+    if (this.next.canFitBlock(block)) {
+      block.setUp(this.next);
+    } else {
+      console.log("FAIL: " + block.centerY + " " + block.centerX);
+    }
   },
   
   /**
@@ -440,14 +459,14 @@ Blox.Block = Class.create({
   },
   
   /**
-   * Positions this Block on the board.
+   * Positions this Block on the given board.
    */
-  setUp: function() {
+  setUp: function(board) {
     this.cells = [];
     var pos, cell;
     for (var i = 0; i < this.positions.length; i++) {
       pos = this.positions[i];
-      cell = Blox.game.board.board[this.centerY + pos.y][this.centerX + pos.x];
+      cell = board.board[this.centerY + pos.y][this.centerX + pos.x];
       this.cells[this.cells.length] = this.markCell(cell);
     }
   },

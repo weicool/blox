@@ -114,8 +114,19 @@ a:link, a:visited, a:active {
   margin: 10px;
 }
 
+#next_container {
+  position: relative;
+}
+
 #next {
-  margin-top: 0.9em;
+  margin-top: 1.5em;
+  margin-left: -1em;
+}
+
+#next_container span {
+  position: relative;
+  top: 1.5em;
+  font-size: 0.8em;
 }
 
 #blox td, #next td {
