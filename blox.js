@@ -18,12 +18,11 @@ Blox.Game = Class.create({
   
   initialize: function() {
     /* board setup */
-    this.board = new Blox.Board(this, $("blox"), 10, 20);
+    this.board = new Blox.Board(this, $("blox"), 10, 20, 1);
     this.board.setUp();
     
     this.next = new Blox.Board(this, $("next"), 5, 3);
     this.next.setUp();
-    this.nextBlockType = null;
     
     /* game setup */
     this.speed = Blox.Speeds.slow;
@@ -53,6 +52,8 @@ Blox.Game = Class.create({
   
   start: function() {
     this.state = Blox.States.new_block;
+    this.activeBlock = null;
+    this.nextBlockType = null;
     this.board.clearBoard();
     this.next.clearBoard();
     this.resetStats();
@@ -86,8 +87,6 @@ Blox.Game = Class.create({
             this.activeBlock.setUp(this.board);
             this.state = Blox.States.moving;
           } else {
-            this.activeBlock = null;
-            this.nextBlockType = null;
             this.state = Blox.States.game_over;
           }
           break;
@@ -112,7 +111,7 @@ Blox.Game = Class.create({
   },
   
   move: function(event) {
-    if (this.state == Blox.States.moving) {
+    if (this.state === Blox.States.moving) {
       switch (event.keyCode) {
         /* Move */
         case Blox.Keys.left:
@@ -147,7 +146,7 @@ Blox.Game = Class.create({
           this.state = Blox.States.paused;
           break;
       }
-    } else if (this.state == Blox.States.paused) {
+    } else if (this.state === Blox.States.paused) {
       switch (event.keyCode) {
         case Blox.Keys.pause:
           this.startTick();
@@ -204,12 +203,12 @@ Blox.Game = Class.create({
    * Called whenever a row is cleared to update game stats.
    */
   updateStats: function(numRowsCleared) {
-    if (numRowsCleared == 0) return;
+    if (numRowsCleared === 0) return;
     
     switch (numRowsCleared) {
       case 4:   this.score += 10; break;
       case 3:   this.score += 5; break;
-      default:  this.score += 1;
+      default:  this.score += numRowsCleared;
     }
     this.scoreContainer.innerHTML = this.score;
     
@@ -254,7 +253,7 @@ Blox.Game = Class.create({
     rotateControl.innerHTML = dropControl.innerHTML;
     dropControl.innerHTML = rotateControlText;
     
-    if (Blox.Keys.rotate == 38) {   // up arrow
+    if (Blox.Keys.rotate === 38) {   // up arrow
       Blox.Keys.rotate = 32;
       Blox.Keys.rotate_alt = 32;
       Blox.Keys.drop = 38;
@@ -271,11 +270,12 @@ Blox.Game = Class.create({
 
 Blox.Board = Class.create({
   
-  initialize: function(game, container, width, length) {
+  initialize: function(game, container, width, length, headerLength) {
     this.game = game;
     this.container = container;
     this.width = width;
-    this.length = length;
+    this.headerLength = headerLength === undefined ? 0 : headerLength;
+    this.length = length + this.headerLength;
   },
   
   setUp: function() {
@@ -283,6 +283,9 @@ Blox.Board = Class.create({
     var row, col;
     for (var y = 0; y < this.length; y++) {
       row = new Element("tr");
+      if (y < this.headerLength) {
+        row.hide();
+      }
       this.board[y] = new Array();
       for (var x = 0; x < this.width; x++) {
         col = new Element("td");
@@ -567,7 +570,7 @@ Blox.Block = Class.create({
     var pos, index;
     for (var i = 0; i < this.cells.length; i++) {
       pos = this.cells[i];
-      if ((pos.y == cell.y) && (pos.x == cell.x)) {
+      if ((pos.y === cell.y) && (pos.x === cell.x)) {
         return i;
       }
     }
