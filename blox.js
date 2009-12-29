@@ -8,7 +8,7 @@ var Blox = {};
 Blox.Speeds = { slow: 600, medium: 460, fast: 50 };
 
 Blox.Keys = { down: 83, down_alt: 40, left: 65, left_alt: 37, right: 68, right_alt: 39,
-  rotate: 38, rotate_alt: 87, drop: 32, drop_alt: 32, pause: 80 };
+  up: 38, rotate: 38, rotate_alt: 87, drop: 32, drop_alt: 32, pause: 80 };
 
 Blox.States = { game_over: -1, paused: 0, new_game: 1, new_block: 2, moving: 3 };
 
@@ -41,6 +41,7 @@ Blox.Game = Class.create({
     Event.observe(document, "keyup", this.stopMoveFast.bind(this));
     
     /* controls setup */
+    this.configureControls();
     $("flip_controls").observe('click', this.flipControls.bind(this));
     
     /* sounds setup */
@@ -245,6 +246,18 @@ Blox.Game = Class.create({
     this.levelContainer.innerHTML = this.level;
   },
   
+  configureControls: function() {
+    var rotateButton = readCookie("blox_controls");
+    if (!rotateButton) {
+      console.log("FAIL");
+      return;
+    }
+    rotateButton = parseInt(rotateButton);
+    if (rotateButton != Blox.Keys.up) {
+      this.flipControls();
+    }
+  },
+  
   flipControls: function() {
     var rotateControl = $$("#controls strong")[0];
     var dropControl = $$("#controls strong")[1];
@@ -253,7 +266,7 @@ Blox.Game = Class.create({
     rotateControl.innerHTML = dropControl.innerHTML;
     dropControl.innerHTML = rotateControlText;
     
-    if (Blox.Keys.rotate === 38) {   // up arrow
+    if (Blox.Keys.rotate === Blox.Keys.up) {   // up arrow
       Blox.Keys.rotate = 32;
       Blox.Keys.rotate_alt = 32;
       Blox.Keys.drop = 38;
@@ -264,8 +277,10 @@ Blox.Game = Class.create({
       Blox.Keys.drop = 32;
       Blox.Keys.drop_alt = 32;
     }
+    
+    writeCookie("blox_controls", Blox.Keys.rotate);
   }
-  
+
 });
 
 Blox.Board = Class.create({
@@ -694,6 +709,25 @@ function assert(condition, msg) {
     throw new Error(msg);
   }
 }
+
+function writeCookie(name, value) {
+  var expires = "; expires=" + (new Date(2030, 0, 3)).toGMTString();
+  document.cookie = name + "=" + value + expires + "; path=/";
+}
+
+function readCookie(name) {
+  var cookies = document.cookie.split(";");
+  var cookie;
+  for (var i = 0; i < cookies.length; i++) {
+    cookie = cookies[i].strip().split("=");
+    if (cookie[0] == name) {
+      return cookie[1];
+    }
+  }
+  return null;
+}
+
+/***** Main *****/
 
 document.observe("dom:loaded", function() {
   Blox.game = new Blox.Game();
