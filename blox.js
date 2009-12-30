@@ -18,7 +18,7 @@ Blox.Game = Class.create({
   
   initialize: function() {
     /* board setup */
-    this.board = new Blox.Board(this, $("blox"), 10, 20, 1);
+    this.board = new Blox.Board(this, $("blox"), 10, 20, 2);
     this.board.setUp();
     
     this.next = new Blox.Board(this, $("next"), 5, 3);
@@ -31,6 +31,8 @@ Blox.Game = Class.create({
     this.moveFastInterval = null;
     this.moveFastTimeout = null;
     this.moveFastDir = null;
+    
+    this.numTimesEncounteredBlock = 0;
     
     /* stats setup */
     this.scoreContainer = $("score");
@@ -79,9 +81,9 @@ Blox.Game = Class.create({
         case Blox.States.new_block:
           var x = Math.floor(this.board.width / 2) - 1;
           if (this.nextBlockType) {
-            this.activeBlock = new this.nextBlockType(0, x);
+            this.activeBlock = new this.nextBlockType(1, x);
           } else {
-            this.activeBlock = new (this.randomBlockType())(0, x);
+            this.activeBlock = new (this.randomBlockType())(1, x);
           }
           this.generateNextBlock();
           if (this.board.canFitBlock(this.activeBlock)) {
@@ -186,7 +188,21 @@ Blox.Game = Class.create({
   },
   
   generateNextBlock: function() {
+    var previousBlock = this.nextBlockType;
     this.nextBlockType = this.randomBlockType();
+    
+    if (previousBlock && (previousBlock.cellClass === this.nextBlockType.cellClass)) {
+      this.numTimesEncounteredBlock++;
+    } else {
+      this.numTimesEncounteredBlock = 0;
+    }
+    
+    if (this.numTimesEncounteredBlock >= 2) {
+      if (Math.random() > 0.2) {
+        this.generateNextBlock();
+      }
+    }
+    
     this.displayNext();
   },
   
