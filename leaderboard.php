@@ -1,7 +1,7 @@
 <?php
 
 function leaderboardRecords($db) {
-  $sql = "SELECT `name`, `score`, `level` FROM blox_leaderboard ORDER BY `score` DESC LIMIT 10";
+  $sql = "SELECT `name`, `score`, `level` FROM blox_leaderboard ORDER BY `score` DESC, `level` DESC LIMIT 10";
   return mysql_query($sql, $db);
 }
 
@@ -10,7 +10,7 @@ function addLeaderboardRecord($db, $params) {
     return;
   }
   
-  $name = substr(mysql_real_escape_string(stripslashes(trim($params['name'])), $db), 0, 16);
+  $name = mysql_real_escape_string(substr(stripslashes(trim($params['name'])), 0, 16), $db);
   if (strlen($name) == 0) {
     $name = 'Anonymous';
   }
@@ -66,19 +66,22 @@ mysql_close($db);
 
 ?>
 
-<div id="leaderboard">
-  <span class="label">Leaderboard</span>
+
+<span class="label">Leaderboard</span>
+
+<table>
+  <tr>
+    <th class="name">Name</th>
+    <th class="score">Score</th>
+    <th class="level">Lvl</th>
+  </tr>
   
-  <table>
-    <tr>
-      <th class="name">Name</th>
-      <th class="score">Score</th>
-      <th class="level">Lvl</th>
-    </tr>
 <?php
+
 while ($entry = mysql_fetch_assoc($leaderboard)) {
-  echo "<tr><td>{$entry['name']}</td><td>{$entry['score']}</td><td>{$entry['level']}</td></tr>\n";
+  echo "<tr><td>{$entry['name']}</td><td class=\"score\">{$entry['score']}</td><td>{$entry['level']}</td></tr>\n";
 }
+
 ?>
-  </table>
-</div>
+
+</table>

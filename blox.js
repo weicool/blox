@@ -43,6 +43,8 @@ Blox.Game = Class.create({
     Event.observe(document, "keydown", this.move.bind(this));
     Event.observe(document, "keyup", this.stopMoveFast.bind(this));
     
+    this.leaderboard = new Blox.Leaderboard();
+    
     /* controls setup */
     this.configureControls();
     $("flip_controls").observe('click', this.flipControls.bind(this));
@@ -104,10 +106,7 @@ Blox.Game = Class.create({
           }
           break;
         default:
-          this.state = Blox.States.game_over;
-          alert("Game Over!");
-          this.stopTick();
-          Blox.startButton.enable();
+          this.onGameOver();
       }
       
       break;  // break while
@@ -261,6 +260,20 @@ Blox.Game = Class.create({
     this.linesContainer.innerHTML = this.lines;
     this.level = 0;
     this.levelContainer.innerHTML = this.level;
+  },
+  
+  onGameOver: function() {
+    this.state = Blox.States.game_over;
+    
+    if (this.score >= this.leaderboard.lowestScore) {
+      var name = prompt("Congratulations on your high score! What's your name?");
+      this.leaderboard.record(name, this.score, this.level);
+    } else {
+      alert("Game Over!");
+    }
+    
+    this.stopTick();
+    Blox.startButton.enable();
   },
   
   /** Loads default controls from cookie. */
@@ -674,7 +687,7 @@ Blox.T = Class.create(Blox.Block, {
   initialize: function($super, initY, initX) {
     this.cellClass = "block_t";
     $super([{ y: 0, x: 0 }, { y: 0, x: -1 }, { y: 0, x: 1 }, { y: 1, x: 0 }], initY, initX);
-  },
+  }
   
 });
 
@@ -684,7 +697,7 @@ Blox.J = Class.create(Blox.Block, {
     this.cellClass = "block_j";
     $super([{ y: 0, x: 0 }, { y: 0, x: -1 }, { y: 0, x: 1 }, { y: 1, x: 1 }], initY, initX);
     this.clockwise = false;
-  },
+  }
   
 });
 
@@ -694,11 +707,38 @@ Blox.L = Class.create(Blox.Block, {
     this.cellClass = "block_l";
     $super([{ y: 0, x: 0 }, { y: 0, x: 1 }, { y: 0, x: -1 }, { y: 1, x: -1 }], initY, initX);
     this.clockwise = false;
-  },
+  }
 
 });
 
 Blox.BlockTypes = [Blox.O, Blox.I, Blox.S, Blox.Z, Blox.T, Blox.J, Blox.L];
+
+/** Leaderboard */
+Blox.Leaderboard = Class.create({
+  
+  initialize: function() {
+    this.container = $('leaderboard');
+    this.lowestScore = 0;
+    this.findLowestScore();
+  },
+  
+  record: function(name, score, level) {
+    if (!name) return;
+    
+    new Ajax.Updater('leaderboard', 'leaderboard.php', {
+      parameters: { 'name': name, 'score': score, 'level': level },
+      onComplete: this.findLowestScore.bind(this)
+    });
+  },
+  
+  findLowestScore: function() {
+    this.lowestScore = Math.min(this.lowestScore,
+      this.container.select("td.score").min(function(score) {
+        return parseInt(score.innerHTML);
+      }) || this.lowestScore);
+  }
+  
+});
 
 /***** Utility Functions *****/
 

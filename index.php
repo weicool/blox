@@ -19,7 +19,9 @@
 <![endif]-->
 
 <div id="blox_container">
-  <?php include 'leaderboard.php'; ?>
+  <div id="leaderboard">
+    <?php include 'leaderboard.php'; ?>
+  </div>
   
   <table id="blox"></table>
   

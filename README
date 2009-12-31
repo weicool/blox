@@ -15,10 +15,8 @@ CREATE TABLE blox_leaderboard (
     date DATETIME NOT NULL,
     ip VARCHAR(16) NOT NULL,
     PRIMARY KEY (id),
-    INDEX (score)
+    INDEX (score, level)
 );
-
-INSERT INTO blox_leaderboard VALUES (NULL, 'weicool', 0, 0, NOW());
 
 #####################
 # Credits

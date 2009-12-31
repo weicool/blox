@@ -55,11 +55,11 @@ a:link, a:visited, a:active {
   text-align: left;
 }
 
-#leaderboard .name {
+#leaderboard th.name {
   width: 60%;
 }
 
-#leaderboard .level {
+#leaderboard th.level {
   width: 14%;
 }
 
