@@ -17,6 +17,8 @@ a:link, a:visited, a:active {
 #blox_container {
   width: 750px;
   margin-top: 50px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #leaderboard {
