@@ -18,7 +18,8 @@ Blox.Game = Class.create({
   
   initialize: function() {
     /* board setup */
-    this.board = new Blox.Board(this, $("blox"), 10, 20, 2);
+    this.container = $("blox");
+    this.board = new Blox.Board(this, this.container, 10, 20, 2);
     this.board.setUp();
     
     this.next = new Blox.Board(this, $("next"), 5, 3);
@@ -145,6 +146,7 @@ Blox.Game = Class.create({
           break;
         /* Other game control */
         case Blox.Keys.pause:
+          this.container.addClassName("paused");
           this.stopTick();
           this.state = Blox.States.paused;
           break;
@@ -152,6 +154,7 @@ Blox.Game = Class.create({
     } else if (this.state === Blox.States.paused) {
       switch (event.keyCode) {
         case Blox.Keys.pause:
+          this.container.removeClassName("paused");
           this.startTick();
           this.state = Blox.States.moving;
           break;

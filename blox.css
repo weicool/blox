@@ -201,3 +201,7 @@ a:link, a:visited, a:active {
 .block_o, .block_i, .block_s, .block_z, .block_j, .block_l, .block_t {
   background-image: url('images/block_bg.png');
 }
+
+.paused {
+  opacity: 0.3;
+}
