@@ -5,7 +5,7 @@
 
 var Blox = {};
 
-Blox.Speeds = { slow: 600, medium: 460, fast: 50 };
+Blox.Speeds = { slowest: 600, medium: 460, fast: 50, fastest: 30 };
 
 Blox.Keys = { down: 83, down_alt: 40, left: 65, left_alt: 37, right: 68, right_alt: 39,
   up: 38, rotate: 38, rotate_alt: 87, drop: 32, drop_alt: 32, pause: 80 };
@@ -26,7 +26,7 @@ Blox.Game = Class.create({
     this.next.setUp();
     
     /* game setup */
-    this.speed = Blox.Speeds.slow;
+    this.speed = Blox.Speeds.slowest;
     this.state = Blox.States.new_game;
     
     this.moveFastInterval = null;
@@ -239,13 +239,13 @@ Blox.Game = Class.create({
       this.levelContainer.innerHTML = this.level;
       
       /* increase speed */
-      var speedIncrease = 0;
+      var speedIncrease;
       if (this.speed > 200) {
         speedIncrease = 20;
-      } else if (this.speed > 100) {
+      } else if (this.speed >= Blox.Speeds.fastest) {
         speedIncrease = 5;
-      } else if (this.speed > 5) {
-        speedIncrease = 2;
+      } else {
+        speedIncrease = 0;
       }
       this.speed -= speedIncrease;
       
