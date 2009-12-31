@@ -2,14 +2,15 @@
 
 body {
   font: 12px "Lucida Grande", "Lucida Sans Unicode", verdana, sans-serif;
-	color: #444;
+  background: #333;
+	color: #999;
 	padding: 0;
   margin: 0;
 	min-width: 500px;
 }
 
 a:link, a:visited, a:active {
-  color: #09F;
+  color: #09C;
   text-decoration: none; 
 }
 
@@ -21,11 +22,45 @@ a:link, a:visited, a:active {
 #leaderboard {
   float: left;
   width: 20em;
-  text-align: center;
+  margin-top: 1.4em;
 }
 
-#leaderboard h2 {
-  font-weight: normal;
+#leaderboard .label {
+  font-size: 0.8em;
+  margin-left: 1.1em;
+}
+
+#leaderboard table {
+  width: 75%;
+  margin-left: 1em;
+  margin-top: 1em;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+#leaderboard td, #leaderboard th {
+  border: 1px solid #666;
+  padding: 0.3em;
+}
+
+#leaderboard th {
+  color: #09C;
+}
+
+#leaderboard td {
+  text-align: right;
+}
+
+#leaderboard td:first-child {
+  text-align: left;
+}
+
+#leaderboard .name {
+  width: 60%;
+}
+
+#leaderboard .level {
+  width: 14%;
 }
 
 #misc {
@@ -34,7 +69,6 @@ a:link, a:visited, a:active {
 }
 
 #stats {
-  margin-top: 1.5em;
   list-style: none;
   margin-left: 0;
   padding-left: 0;
@@ -46,7 +80,7 @@ a:link, a:visited, a:active {
   font-size: 0.8em;
 }
 
-#stats li span {
+#score, #lines, #level {
   display: block;
   font-size: 2em;
   margin-left: 5px;
@@ -56,16 +90,13 @@ a:link, a:visited, a:active {
   font-size: 3em;
 }
 
-#level {
-}
-
 #start_button {
-  margin-top: 40px;
+  margin-top: 30px;
 }
 
 #controls {
   position: relative;
-  margin-top: 40px;
+  margin-top: 60px;
 }
 
 #controls ul {
@@ -90,7 +121,7 @@ a:link, a:visited, a:active {
   padding: 3em;
   text-align: left;
   font-size: 0.9em;
-  color: #999;
+  color: #666;
 }
 
 .error {
@@ -98,6 +129,10 @@ a:link, a:visited, a:active {
   text-align: center;
   color: #F00;
   font-weight: bold;
+}
+
+.label {
+  color: #09C;
 }
 
 /***** Game *****/

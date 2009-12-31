@@ -20,22 +20,40 @@
 
 <div id="blox_container">
   <div id="leaderboard">
-    <h2>Leaderboard</h2>
+    <span class="label">Leaderboard</span>
+    
+    <table>
+      <tr>
+        <th class="name">Name</th>
+        <th class="score">Score</th>
+        <th class="level">Lvl</th>
+      </tr>
+      <tr>
+        <td>Master Chief 99</td>
+        <td>10009</td>
+        <td>100</td>
+      </tr>
+      <tr>
+        <td>Andy Law</td>
+        <td>1337</td>
+        <td>25</td>
+      </tr>
+    </table>
   </div>
   
   <table id="blox"></table>
   
   <div id="misc">
     <div id="next_container">
-      <span>next</span>
+      <span class="label">next</span>
       <table id="next">
       </table>
     </div>
     
     <ul id="stats">
-      <li>score <span id="score">0</span></li>
-      <li>lines <span id="lines">0</span></li>
-      <li>level <span id="level">0</li>
+      <li><span class="label">score</span> <span id="score">0</span></li>
+      <li><span class="label">lines</span> <span id="lines">0</span></li>
+      <li><span class="label">level</span> <span id="level">0</li>
     </ul>
     
     <input id="start_button" name="start_button" type="button" value="Start" />
@@ -46,7 +64,7 @@
         <li><strong>spacebar</strong> drops</li>
         <li><strong>p</strong> pauses</li>
       <ul>
-      <img src="images/flip.png" id="flip_controls" />
+      <img src="images/flip.png" id="flip_controls" alt="Flip buttons for rotating and dropping" />
     </div>
   </div>
   
