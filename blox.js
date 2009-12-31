@@ -216,9 +216,7 @@ Blox.Game = Class.create({
     block.setUp(this.next);
   },
   
-  /**
-   * Called whenever a row is cleared to update game stats.
-   */
+  /** Called whenever a row is cleared to update game stats. */
   updateStats: function(numRowsCleared) {
     if (numRowsCleared === 0) return;
     
@@ -262,10 +260,10 @@ Blox.Game = Class.create({
     this.levelContainer.innerHTML = this.level;
   },
   
+  /** Loads default controls from cookie. */
   configureControls: function() {
     var rotateButton = readCookie("blox_controls");
     if (!rotateButton) {
-      console.log("FAIL");
       return;
     }
     rotateButton = parseInt(rotateButton);
@@ -352,9 +350,7 @@ Blox.Board = Class.create({
     return true;
   },
   
-  /** 
-   * Is it possible to mark the cell at the given coordinates? 
-   */
+  /** Is it possible to mark the cell at the given coordinates? */
   canMarkCell: function(y, x) {
     if (!this.isValidCell(y, x)) {
       return false;
@@ -369,9 +365,7 @@ Blox.Board = Class.create({
   
   /***** Clearing *****/
   
-  /**
-   * Clears as many rows as possible.
-   */
+  /** Clears as many rows as possible. */
   clear: function() {
     var numRowsCleared = 0;
     /* Determine which rows to clear. */
@@ -399,18 +393,14 @@ Blox.Board = Class.create({
     }
   },
   
-  /**
-   * Shifts rows down starting from the row at the given index.
-   */
+  /** Shifts rows down starting from the row at the given index. */
   shiftDownFrom: function(rowIndex) {
     for (var y = rowIndex; y >= 0; y--) {
       this.shiftDown(y);
     }
   },
   
-  /**
-   * Shifts down each unit on the row at the given row index.
-   */
+  /** Shifts down each unit on the row at the given row index. */
   shiftDown: function(rowIndex) {
     var row = this.board[rowIndex];
     var cell, block;
@@ -437,9 +427,7 @@ Blox.Board = Class.create({
     return true;
   },
   
-  /**
-   * Returns true if the row at the given row index is empty.
-   */
+  /** Returns true if the row at the given row index is empty. */
   rowEmpty: function(rowIndex) {
     var row = this.board[rowIndex];
     for (var x = 0; x < this.width; x++) {
@@ -488,9 +476,7 @@ Blox.Block = Class.create({
     this.clockwise = true;
   },
   
-  /**
-   * Positions this Block on the given board.
-   */
+  /** Positions this Block on the given board. */
   setUp: function(board) {
     this.cells = [];
     var pos, cell;
@@ -509,9 +495,7 @@ Blox.Block = Class.create({
     return cell;
   },
   
-  /** 
-   * Unmarks the given cell. 
-   */
+  /** Unmarks the given cell. */
   unmarkCell: function(cell) {
     cell.unmark(this);
     this.cells.splice(this.indexOfCell(cell), 1);
@@ -519,9 +503,7 @@ Blox.Block = Class.create({
   
   /***** Moving *****/
   
-  /** 
-   * Moves in the direction implied by the method name.
-   */
+  /** Moves in the direction implied by the method name. */
   moveDown: function () { if (this.canMoveDown()) this.moveTo(this.shiftBy(1, 0)); },
   moveLeft: function () { if (this.canMoveLeft()) this.moveTo(this.shiftBy(0, -1)); },
   moveRight: function () { if (this.canMoveRight()) this.moveTo(this.shiftBy(0, 1)); },
@@ -547,9 +529,7 @@ Blox.Block = Class.create({
   canMoveLeft: function () { return this.canMoveTo(this.shiftBy(0, -1)); },
   canMoveRight: function () { return this.canMoveTo(this.shiftBy(0, 1)); },
   
-  /**
-   * Returns a list of new positions resulting from shifting current cells.
-   */
+  /** Returns a list of new positions resulting from shifting current cells. */
   shiftBy: function(shiftY, shiftX) {
     var newPositions = [];
     for (var i = 0; i < this.cells.length; i++) {
