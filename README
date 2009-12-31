@@ -15,7 +15,8 @@ CREATE TABLE blox_leaderboard (
     date DATETIME NOT NULL,
     ip VARCHAR(16) NOT NULL,
     PRIMARY KEY (id),
-    INDEX (score, level)
+    INDEX (score, level),
+    INDEX (ip)
 );
 
 #####################

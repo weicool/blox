@@ -51,9 +51,10 @@
   </div>
   
   <div class="info">
-    This game is made by <a href="http://weicool.net">Wei</a>.
+    A <a href="http://weicool.net">weicool</a> production.
     Thanks to <a href="http://belkadan.com/tetris/">this game</a> for the inspiration, 
-    and <a href="mailto:kinkyoto@gmail.com">Mark</a> for the button graphics and block shading.
+    <a href="mailto:kinkyoto@gmail.com">Mark</a> for the block shading, and all
+    my friends for testing.
   </div>
 </div>
 

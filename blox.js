@@ -720,7 +720,7 @@ Blox.Leaderboard = Class.create({
   
   initialize: function() {
     this.container = $('leaderboard');
-    this.lowestScore = 0;
+    this.lowestScore = 4000000000;
     this.findLowestScore();
   },
   
