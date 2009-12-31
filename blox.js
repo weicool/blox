@@ -616,9 +616,9 @@ Blox.Block = Class.create({
     for (var i = 0; i < this.positions.length; i++) {
       pos = this.positions[i];
       if (this.clockwise) {
-        this.positions[i] = { y: -pos.x, x:  pos.y }
-      } else {
         this.positions[i] = { y:  pos.x, x: -pos.y }
+      } else {
+        this.positions[i] = { y: -pos.x, x:  pos.y }
       }
       newPositions[newPositions.length] = { 
         y: this.cells[0].y + this.positions[i].y, 
@@ -700,7 +700,6 @@ Blox.J = Class.create(Blox.Block, {
   initialize: function($super, initY, initX) {
     this.cellClass = "block_j";
     $super([{ y: 0, x: 0 }, { y: 0, x: -1 }, { y: 0, x: 1 }, { y: 1, x: 1 }], initY, initX);
-    this.clockwise = false;
   }
   
 });
@@ -710,7 +709,6 @@ Blox.L = Class.create(Blox.Block, {
   initialize: function($super, initY, initX) {
     this.cellClass = "block_l";
     $super([{ y: 0, x: 0 }, { y: 0, x: 1 }, { y: 0, x: -1 }, { y: 1, x: -1 }], initY, initX);
-    this.clockwise = false;
   }
 
 });
