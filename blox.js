@@ -82,19 +82,7 @@ Blox.Game = Class.create({
     while (true) {
       switch (this.state) {
         case Blox.States.new_block:
-          var x = Math.floor(this.board.width / 2) - 1;
-          if (this.nextBlockType) {
-            this.activeBlock = new this.nextBlockType(1, x);
-          } else {
-            this.activeBlock = new (this.randomBlockType())(1, x);
-          }
-          this.generateNextBlock();
-          if (this.board.canFitBlock(this.activeBlock)) {
-            this.activeBlock.setUp(this.board);
-            this.state = Blox.States.moving;
-          } else {
-            this.state = Blox.States.game_over;
-          }
+          this.onNewBlock();
           break;
         case Blox.States.moving:
           if (this.activeBlock.canMoveDown()) {
@@ -111,6 +99,36 @@ Blox.Game = Class.create({
       
       break;  // break while
     }
+  },
+  
+  onNewBlock: function() {
+    var x = Math.floor(this.board.width / 2) - 1;
+    if (this.nextBlockType) {
+      this.activeBlock = new this.nextBlockType(1, x);
+    } else {
+      this.activeBlock = new (this.randomBlockType())(1, x);
+    }
+    this.generateNextBlock();
+    if (this.board.canFitBlock(this.activeBlock)) {
+      this.activeBlock.setUp(this.board);
+      this.state = Blox.States.moving;
+    } else {
+      this.state = Blox.States.game_over;
+    }
+  },
+  
+  onGameOver: function() {
+    this.state = Blox.States.game_over;
+    
+    if (this.score >= this.leaderboard.lowestScore) {
+      var name = prompt("Congratulations on your high score! What's your name?");
+      this.leaderboard.record(name, this.score, this.level);
+    } else {
+      alert("Game Over!");
+    }
+    
+    this.stopTick();
+    Blox.startButton.enable();
   },
   
   move: function(event) {
@@ -260,20 +278,6 @@ Blox.Game = Class.create({
     this.linesContainer.innerHTML = this.lines;
     this.level = 0;
     this.levelContainer.innerHTML = this.level;
-  },
-  
-  onGameOver: function() {
-    this.state = Blox.States.game_over;
-    
-    if (this.score >= this.leaderboard.lowestScore) {
-      var name = prompt("Congratulations on your high score! What's your name?");
-      this.leaderboard.record(name, this.score, this.level);
-    } else {
-      alert("Game Over!");
-    }
-    
-    this.stopTick();
-    Blox.startButton.enable();
   },
   
   /** Loads default controls from cookie. */
