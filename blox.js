@@ -17,7 +17,7 @@ Blox.Game = Class.create({
   initialize: function() {
     /* board setup */
     this.container = $("blox");
-    this.board = new Blox.Board(this, this.container, 10, 20, 2);
+    this.board = new Blox.Board(this, this.container, 10, 20, 3);
     this.board.setUp();
     
     this.next = new Blox.Board(this, $("next"), 5, 3);
@@ -101,9 +101,9 @@ Blox.Game = Class.create({
   onNewBlock: function() {
     var x = Math.floor(this.board.width / 2) - 1;
     if (this.nextBlockType) {
-      this.activeBlock = new this.nextBlockType(1, x);
+      this.activeBlock = new this.nextBlockType(2, x);
     } else {
-      this.activeBlock = new (this.randomBlockType())(1, x);
+      this.activeBlock = new (this.randomBlockType())(2, x);
     }
     this.generateNextBlock();
     if (this.board.canFitBlock(this.activeBlock)) {

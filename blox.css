@@ -2,11 +2,11 @@
 
 body {
   font: 12px "Lucida Grande", "Lucida Sans Unicode", verdana, sans-serif;
-  background: #333;
-	color: #999;
-	padding: 0;
+  background: #333 url('images/bg.png');
+  color: #999;
+  padding: 0;
   margin: 0;
-	min-width: 500px;
+  min-width: 500px;
 }
 
 a:link, a:visited, a:active {
@@ -155,7 +155,10 @@ a:link, a:visited, a:active {
 
 #blox {
   float: left;
-  border: 2px solid #AAA;
+  border-radius: 0.3em;
+  -moz-border-radius: 0.3em;
+  -webkit-box-shadow: 2px 5px 20px #000;
+  -moz-box-shadow: 2px 5px 20px #000;
   background: #FBFBFB;
   margin: 10px;
 }
