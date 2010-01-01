@@ -7,6 +7,7 @@ body {
   padding: 0;
   margin: 0;
   min-width: 500px;
+  text-shadow: 0.1em 0.1em 2px #000;
 }
 
 a:link, a:visited, a:active {
@@ -14,9 +15,31 @@ a:link, a:visited, a:active {
   text-decoration: none; 
 }
 
+a:hover {
+  color: #0AE;
+}
+
+#header {
+  background: #222 url('images/bg_dark.png');
+  padding: 0.5em;
+  border-top: 1px solid #111;
+  border-bottom: 1px solid #444;
+  text-align: center;
+}
+
+#header img {
+  -webkit-box-shadow: 1px 0px 15px #0AE;
+  -moz-box-shadow: 1px 4px 20px #000;
+}
+
+h1 {
+  margin: 0 15.5em 0 0;
+  font-size: 3.3em;
+}
+
 #blox_container {
   width: 750px;
-  margin-top: 50px;
+  margin-top: 2em;
   margin-left: auto;
   margin-right: auto;
 }
@@ -41,12 +64,12 @@ a:link, a:visited, a:active {
 }
 
 #leaderboard td, #leaderboard th {
-  border: 1px solid #666;
+  border: 1px solid #333;
   padding: 0.3em;
 }
 
 #leaderboard th {
-  color: #09C;
+  background: #222;/* url('images/bg_dark.png');*/
 }
 
 #leaderboard td {
@@ -71,10 +94,11 @@ a:link, a:visited, a:active {
 }
 
 #stats {
-  list-style: none;
-  margin-left: 0;
-  padding-left: 0;
   position: relative;
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0;
+  margin-top: -0.5em;
 }
 
 #stats li {
@@ -86,10 +110,6 @@ a:link, a:visited, a:active {
   display: block;
   font-size: 2em;
   margin-left: 5px;
-}
-
-#stats li #score {
-  font-size: 3em;
 }
 
 #start_button {
@@ -157,8 +177,8 @@ a:link, a:visited, a:active {
   float: left;
   border-radius: 0.3em;
   -moz-border-radius: 0.3em;
-  -webkit-box-shadow: 2px 5px 20px #000;
-  -moz-box-shadow: 2px 5px 20px #000;
+  -webkit-box-shadow: 1px 4px 20px #000;
+  -moz-box-shadow: 1px 4px 20px #000;
   background: #FBFBFB;
   margin: 10px;
 }

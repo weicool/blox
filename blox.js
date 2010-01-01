@@ -680,7 +680,7 @@ Blox.O = Class.create(Blox.Block, {
   
   initialize: function($super, initY, initX) {
     this.cellClass = "block_o";
-    $super([{ y: 0, x: 0 }, { y: 0, x: 1 }, { y: 1, x: 0 }, { y: 1, x: 1 }], initY, initX);
+    $super([{ y: 0, x: 0 }, { y: 0, x: -1 }, { y: 1, x: 0 }, { y: 1, x: -1 }], initY, initX);
   },
   
   rotate: function() {}
