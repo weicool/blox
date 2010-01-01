@@ -10,13 +10,13 @@ function addLeaderboardRecord($params, $db) {
     return;
   }
   
-  $name = mysql_real_escape_string(substr(stripslashes(trim($params['name'])), 0, 16), $db);
+  $name = mysql_real_escape_string(substr(trim($params['name']), 0, 16), $db);
   if (strlen($name) == 0) {
     $name = 'Anonymous';
   }
-  $score = (int) $params['score'];
+  $score = intval($params['score']);
   if ($score < 0) return;
-  $level = (int) $params['level'];
+  $level = intval($params['level']);
   if ($level < 0 || $level > $score) return;
   
   $ip = mysql_real_escape_string(getIP(), $db);
@@ -53,7 +53,7 @@ function recentlyRecorded($ip, $db) {
   if ($timeDiff = mysql_query($sql, $db)) {
     $timeDiff = mysql_fetch_array($timeDiff);
     $timeDiff = $timeDiff[0];
-    return $timeDiff || ((int) $timeDiff) < 2 * 60;
+    return $timeDiff || intval($timeDiff) < 2 * 60;
   }
   return true;
 }

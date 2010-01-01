@@ -8,7 +8,7 @@ Developed on Mac OS X Snow Leopard
 #####################
 
 CREATE TABLE blox_leaderboard (
-    id INT UNSIGNED AUTO_INCREMENT NOT NULL,
+    id INT UNSIGNED AUTO_INCREMENT,
     name VARCHAR(16) NOT NULL,
     score INT UNSIGNED NOT NULL,
     level SMALLINT UNSIGNED NOT NULL,
