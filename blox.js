@@ -12,8 +12,6 @@ Blox.Keys = { down: 83, down_alt: 40, left: 65, left_alt: 37, right: 68, right_a
 
 Blox.States = { game_over: -1, paused: 0, new_game: 1, new_block: 2, moving: 3 };
 
-Blox.Dir = { left: 1, down: 2, right: 3 };
-
 Blox.Game = Class.create({
   
   initialize: function() {
