@@ -5,7 +5,7 @@
 
 var Blox = {};
 
-Blox.Speeds = { slowest: 600, medium: 460, fast: 50, fastest: 30 };
+Blox.Speeds = { slowest: 550, fastest: 40 };
 
 Blox.Keys = { down: 83, down_alt: 40, left: 65, left_alt: 37, right: 68, right_alt: 39,
   up: 38, rotate: 38, rotate_alt: 87, drop: 32, drop_alt: 32, pause: 80 };
@@ -26,7 +26,6 @@ Blox.Game = Class.create({
     this.next.setUp();
     
     /* game setup */
-    this.speed = Blox.Speeds.slowest;
     this.state = Blox.States.new_game;
     
     this.moveFastInterval = null;
@@ -58,6 +57,7 @@ Blox.Game = Class.create({
   
   start: function() {
     this.state = Blox.States.new_block;
+    this.speed = Blox.Speeds.slowest;
     this.activeBlock = null;
     this.nextBlockType = null;
     this.board.clearBoard();
@@ -241,9 +241,9 @@ Blox.Game = Class.create({
     if (numRowsCleared === 0) return;
     
     switch (numRowsCleared) {
-      case 4:   this.score += 10; break;
-      case 3:   this.score += 5; break;
-      default:  this.score += numRowsCleared;
+      case 4:   this.score += 100; break;
+      case 3:   this.score += 50; break;
+      default:  this.score += numRowsCleared * 10;
     }
     this.scoreContainer.innerHTML = this.score;
     
@@ -258,7 +258,7 @@ Blox.Game = Class.create({
       /* increase speed */
       var speedIncrease;
       if (this.speed > 200) {
-        speedIncrease = 20;
+        speedIncrease = 25;
       } else if (this.speed >= Blox.Speeds.fastest) {
         speedIncrease = 5;
       } else {
@@ -473,7 +473,8 @@ Blox.Board = Class.create({
   
   /** Animates the clearing of rows and calls clearRows() upon completion. */
   animateClear: function() {
-    this.blinkCount = 6;
+    this.blinkCount = 4;
+    this.blink();
     this.blinkInterval = setInterval(this.blink.bind(this), 100);
   },
   

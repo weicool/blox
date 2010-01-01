@@ -98,18 +98,24 @@ a:link, a:visited, a:active {
 
 #controls {
   position: relative;
-  margin-top: 60px;
+  margin-top: 40px;
+}
+
+#controls .label {
+  font-size: 0.8em;
 }
 
 #controls ul {
-  padding-left: 1.5em;
   font-size: 0.9em;
+  padding-left: 1.5em;
+  margin-top: 0.5em;
+  margin-left: 0.5em;
 }
 
 #controls #flip_controls {
   position: absolute;
-  left: 11.5em;
-  top: 0.5em;
+  left: 9.8em;
+  top: 2em;
   cursor: pointer;
 }
 

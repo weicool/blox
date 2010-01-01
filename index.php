@@ -41,12 +41,13 @@
     <input id="start_button" name="start_button" type="button" value="Start" />
     
     <div id="controls">
+      <span class="label">controls</span>
+      <img src="images/flip.png" id="flip_controls" alt="Flip buttons for rotating and dropping" />
       <ul>
         <li><strong>up arrow</strong> rotates</li>
         <li><strong>spacebar</strong> drops</li>
         <li><strong>p</strong> pauses</li>
       <ul>
-      <img src="images/flip.png" id="flip_controls" alt="Flip buttons for rotating and dropping" />
     </div>
   </div>
   
