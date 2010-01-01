@@ -48,9 +48,8 @@ Blox.Game = Class.create({
     this.configureControls();
     $("flip_controls").observe('click', this.flipControls.bind(this));
     
-    /* sounds setup */
-    //this.music = $("music");
-    //this.soundClear = $("sound_clear");
+    /* audio setup */
+    this.audio = new Blox.Audio();
   },
   
   /***** Game Operation *****/
@@ -68,13 +67,13 @@ Blox.Game = Class.create({
   
   startTick: function() {
     this.tickRun = setInterval(this.tick.bind(this), this.speed);
-    //this.music.Play();
+    this.audio.play(Blox.Sounds.bg);
   },
   
   stopTick: function() {
     clearInterval(this.tickRun);
     this.tickRun = null;
-    //this.music.Stop();
+    this.audio.stop(Blox.Sounds.bg);
   },
   
   /** Advances the game. */
@@ -189,7 +188,7 @@ Blox.Game = Class.create({
       this.moveFastTimeout = null;
     }
     this.moveFastDir = moveDir;
-    this.moveFastTimeout = setTimeout(this.moveFast.bind(this), 400);
+    this.moveFastTimeout = setTimeout(this.moveFast.bind(this), 250);
   },
   
   /**
@@ -400,6 +399,9 @@ Blox.Board = Class.create({
     
     if (this.rowsToClear.length > 0) {
       this.animateClear();
+      
+      var sound = this.rowsToClear.length == 4 ? Blox.Sounds.clear_tetris : Blox.Sounds.clear;
+      Blox.game.audio.play(sound);
     }
   },
   
@@ -757,6 +759,50 @@ Blox.L = Class.create(Blox.Block, {
 });
 
 Blox.BlockTypes = [Blox.O, Blox.I, Blox.S, Blox.Z, Blox.T, Blox.J, Blox.L];
+
+
+/** Audio */
+
+Blox.Sounds = { bg: 1, clear: 2, clear_tetris: 3 };
+
+Blox.Audio = Class.create({
+  
+  initialize: function() {
+    this.bgmusic = $("bgmusic");
+    this.soundClear = $("sound_clear");
+    this.soundClearTetris = $("sound_clear_tetris");
+    
+    this.mute = false;
+    $("mute").observe('change', this.toggleMute.bind(this));
+  },
+  
+  play: function(sound) {
+    if (this.mute) return;
+    
+    switch (sound) {
+      case Blox.Sounds.bg: this.bgmusic.Play(); break;
+      case Blox.Sounds.clear: this.soundClear.Play(); break;
+      case Blox.Sounds.clear_tetris: this.soundClearTetris.Play(); break;
+    }
+  },
+  
+  stop: function(sound) {
+    switch (sound) {
+      case Blox.Sounds.bg: this.bgmusic.Stop(); break;
+    }
+  },
+  
+  toggleMute: function() {
+    this.mute = !this.mute;
+    if (this.mute) {
+      this.stop(Blox.Sounds.bg);
+    } else if (Blox.game.state >= Blox.States.new_block) {
+      this.play(Blox.Sounds.bg);
+    }
+  }
+  
+});
+
 
 /** Leaderboard */
 Blox.Leaderboard = Class.create({
