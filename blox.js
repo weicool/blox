@@ -329,13 +329,15 @@ Blox.Board = Class.create({
   
   setUp: function() {
     this.board = [];
+    this.rows = [];
     var row, col;
     for (var y = 0; y < this.length; y++) {
       row = new Element("tr");
+      this.rows[y] = row;
       if (y < this.headerLength) {
         row.hide();
       }
-      this.board[y] = new Array();
+      this.board[y] = [];
       for (var x = 0; x < this.width; x++) {
         col = new Element("td");
         row.appendChild(col);
@@ -387,19 +389,28 @@ Blox.Board = Class.create({
   
   /** Clears as many rows as possible. */
   clear: function() {
-    var numRowsCleared = 0;
+    this.rowsToClear = [];
+    
     /* Determine which rows to clear. */
-    for (var y = this.length - 1; y >= 0;) {
+    for (var y = this.length - 1; y >= 0; y--) {
       if (this.rowClearable(y)) {
-        this.clearRow(y);
-        this.shiftDownFrom(y - 1);
-        numRowsCleared++;
-      } else {
-        y--;
+        this.rowsToClear[this.rowsToClear.length] = y;
       }
     }
     
-    this.game.updateStats(numRowsCleared);
+    if (this.rowsToClear.length > 0) {
+      this.animateClear();
+    }
+  },
+  
+  clearRows: function() {
+    var numRowsToClear = this.rowsToClear.length;
+    
+    for (var i = numRowsToClear - 1; i >= 0; i--) {
+      this.clearRow(this.rowsToClear[i]);
+    }
+    
+    this.game.updateStats(numRowsToClear);
   },
   
   clearRow: function(rowIndex) {
@@ -411,6 +422,8 @@ Blox.Board = Class.create({
       block = cell.block;
       block.unmarkCell(cell);
     }
+    
+    this.shiftDownFrom(rowIndex - 1);
   },
   
   /** Shifts rows down starting from the row at the given index. */
@@ -456,6 +469,35 @@ Blox.Board = Class.create({
       }
     }
     return true;
+  },
+  
+  /** Animates the clearing of rows and calls clearRows() upon completion. */
+  animateClear: function() {
+    this.blinkCount = 6;
+    this.blinkInterval = setInterval(this.blink.bind(this), 100);
+  },
+  
+  blink: function() {
+    if (this.blinkCount <= 0) {
+      this.blinkCount = 0;
+      clearInterval(this.blinkInterval);
+      this.blinkInterval = null;
+      this.clearRows();
+      return;
+    }
+
+    var hide = this.blinkCount % 2 == 0;
+    var row;
+    for (var i = 0; i < this.rowsToClear.length; i++) {
+      row = this.rows[this.rowsToClear[i]];
+      if (hide) {
+        row.addClassName("hidden");
+      } else {
+        row.removeClassName("hidden");
+      } 
+    }
+    
+    this.blinkCount--;
   }
 
 });

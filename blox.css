@@ -172,6 +172,10 @@ a:link, a:visited, a:active {
   margin: 0;
 }
 
+#blox tr.hidden {
+  visibility: hidden;
+}
+
 .block_o {
   background-color: orange;
 }
