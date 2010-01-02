@@ -64,37 +64,44 @@ Blox.Game = Class.create({
   },
   
   startTick: function() {
-    this.tickRun = setInterval(this.tick.bind(this), this.speed);
+    this.startTickInterval();
     this.audio.play(Blox.Sounds.bg);
   },
   
+  startTickInterval: function() {
+    this.tickRun = setInterval(this.tick.bind(this), this.speed);
+  },
+  
   stopTick: function() {
-    clearInterval(this.tickRun);
-    this.tickRun = null;
+    this.stopTickInterval();
     this.audio.stop(Blox.Sounds.bg);
+  },
+  
+  stopTickInterval: function() {
+    if (this.tickRun) {
+      clearInterval(this.tickRun);
+      this.tickRun = null;
+    }
   },
   
   /** Advances the game. */
   tick: function() {
-    while (true) {
-      switch (this.state) {
-        case Blox.States.new_block:
-          this.onNewBlock();
-          break;
-        case Blox.States.moving:
-          if (this.activeBlock.canMoveDown()) {
-            this.activeBlock.moveDown();
-          } else {
-            this.board.clear();
-            this.state = Blox.States.new_block;
-            continue;
-          }
-          break;
-        default:
-          this.onGameOver();
-      }
-      
-      break;  // break while
+    if (!this.tickRun) return;
+    
+    switch (this.state) {
+      case Blox.States.new_block:
+        this.onNewBlock();
+        break;
+      case Blox.States.moving:
+        if (this.activeBlock.canMoveDown()) {
+          this.activeBlock.moveDown();
+        } else {
+          this.board.clear();
+          this.state = Blox.States.new_block;
+        }
+        break;
+      default:
+        this.onGameOver();
     }
   },
   
@@ -152,6 +159,7 @@ Blox.Game = Class.create({
           break;
         case Blox.Keys.rotate:
         case Blox.Keys.rotate_alt:
+          this.audio.play(Blox.Sounds.rotate);
           this.activeBlock.rotate();
           break;
         case Blox.Keys.drop:
@@ -262,9 +270,6 @@ Blox.Game = Class.create({
         speedIncrease = 0;
       }
       this.speed -= speedIncrease;
-      
-      this.stopTick();
-      this.startTick();
     }
   },
   
@@ -314,6 +319,8 @@ Blox.Game = Class.create({
 
 });
 
+
+/** Board */
 Blox.Board = Class.create({
   
   initialize: function(game, container, width, length, headerLength) {
@@ -396,6 +403,8 @@ Blox.Board = Class.create({
     }
     
     if (this.rowsToClear.length > 0) {
+      this.game.stopTickInterval();
+      
       this.animateClear();
       
       var sound = this.rowsToClear.length == 4 ? Blox.Sounds.clear_tetris : Blox.Sounds.clear;
@@ -411,6 +420,8 @@ Blox.Board = Class.create({
     }
     
     this.game.updateStats(numRowsToClear);
+    
+    this.game.startTickInterval();
   },
   
   clearRow: function(rowIndex) {
@@ -527,6 +538,7 @@ Blox.Cell = Class.create({
   }
   
 });
+
 
 /** Blocks */
 Blox.Block = Class.create({
@@ -761,12 +773,13 @@ Blox.BlockTypes = [Blox.O, Blox.I, Blox.S, Blox.Z, Blox.T, Blox.J, Blox.L];
 
 /** Audio */
 
-Blox.Sounds = { bg: 1, clear: 2, clear_tetris: 3 };
+Blox.Sounds = { bg: 1, rotate: 2, clear: 3, clear_tetris: 4 };
 
 Blox.Audio = Class.create({
   
   initialize: function() {
     this.bgmusic = $("bgmusic");
+    this.soundRotate = $("sound_rotate");
     this.soundClear = $("sound_clear");
     this.soundClearTetris = $("sound_clear_tetris");
     
@@ -777,16 +790,27 @@ Blox.Audio = Class.create({
   play: function(sound) {
     if (this.mute) return;
     
+    var sound;
     switch (sound) {
-      case Blox.Sounds.bg: this.bgmusic.Play(); break;
-      case Blox.Sounds.clear: this.soundClear.Play(); break;
-      case Blox.Sounds.clear_tetris: this.soundClearTetris.Play(); break;
+      case Blox.Sounds.bg: sound = this.bgmusic; break;
+      case Blox.Sounds.rotate: sound = this.soundRotate; break;
+      case Blox.Sounds.clear: sound = this.soundClear; break;
+      case Blox.Sounds.clear_tetris: sound = this.soundClearTetris; break;
+    }
+    
+    if (sound.Play !== undefined) {
+      sound.Play();
     }
   },
   
   stop: function(sound) {
+    var sound;
     switch (sound) {
-      case Blox.Sounds.bg: this.bgmusic.Stop(); break;
+      case Blox.Sounds.bg: sound = this.bgmusic; break;
+    }
+    
+    if (sound.Play !== undefined) {
+      sound.Stop();
     }
   },
   

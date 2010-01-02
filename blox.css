@@ -59,17 +59,22 @@ h1 {
   width: 75%;
   margin-left: 1em;
   margin-top: 1em;
+  border: 0;
   border-collapse: collapse;
   font-size: 0.9em;
 }
 
+#leaderboard tr:nth-child(odd) {
+  background: #2B2B2B;
+}
+
 #leaderboard td, #leaderboard th {
-  border: 1px solid #333;
+
   padding: 0.3em;
 }
 
 #leaderboard th {
-  background: #222;/* url('images/bg_dark.png');*/
+  background: #222;
 }
 
 #leaderboard td {

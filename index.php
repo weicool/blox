@@ -18,6 +18,10 @@
 </p>
 <![endif]-->
 
+<div id="header">
+  <h1>b l <img src="images/block_o.png" alt="o" /> x</h1>
+</div>
+
 <div id="blox_container">
   <div id="leaderboard">
     <?php include 'leaderboard.php'; ?>
@@ -42,7 +46,7 @@
     
     <div id="controls">
       <span class="label">controls</span>
-      <img src="images/flip.png" id="flip_controls" alt="Flip buttons for rotating and dropping" />
+      <img src="images/flip.png" id="flip_controls" alt="Flip buttons for rotating and dropping" title="Flip buttons for rotating and dropping" />
       <ul>
         <li><strong>up arrow</strong> rotates</li>
         <li><strong>spacebar</strong> drops</li>
@@ -64,6 +68,7 @@
 </div>
 
 <embed id="bgmusic" class="sfx" src="audio/bgmusic.mid" autostart="false" loop="true" volume="50" />
+<embed id="sound_rotate" class="sfx" src="audio/rotate.wav" autostart="false" volume="10" />
 <embed id="sound_clear" class="sfx" src="audio/clear.mp3" autostart="false" volume="10" />
 <embed id="sound_clear_tetris" class="sfx" src="audio/clear_tetris.wav" autostart="false" volume="30" />
 

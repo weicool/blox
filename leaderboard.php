@@ -1,7 +1,7 @@
 <?php
 
 function leaderboardRecords($db) {
-  $sql = "SELECT `name`, `score`, `level` FROM blox_leaderboard ORDER BY `score` DESC, `level` DESC LIMIT 12";
+  $sql = "SELECT `name`, `score`, `level` FROM blox_leaderboard ORDER BY `score` DESC, `level` DESC LIMIT 13";
   return mysql_query($sql, $db);
 }
 
