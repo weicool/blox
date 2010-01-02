@@ -20,7 +20,7 @@ function addLeaderboardRecord($params, $db) {
   if ($level < 0 || $level > $score) return;
   
   $ip = mysql_real_escape_string(getIP(), $db);
-  if (!recentlyRecorded($ip, $db)) {
+  if (recentlyRecorded($ip, $db)) {
     return;
   }
   
