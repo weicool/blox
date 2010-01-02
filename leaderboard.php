@@ -1,7 +1,7 @@
 <?php
 
 function leaderboardRecords($db) {
-  $sql = "SELECT `name`, `score`, `level` FROM blox_leaderboard ORDER BY `score` DESC, `level` DESC LIMIT 13";
+  $sql = "SELECT `name` as name, `score`, `level` FROM blox_leaderboard ORDER BY `score` DESC, `level` DESC LIMIT 13";
   return mysql_query($sql, $db);
 }
 
@@ -53,9 +53,9 @@ function recentlyRecorded($ip, $db) {
   if ($timeDiff = mysql_query($sql, $db)) {
     $timeDiff = mysql_fetch_array($timeDiff);
     $timeDiff = $timeDiff[0];
-    return $timeDiff || intval($timeDiff) < 2 * 60;
+    return intval($timeDiff) < 2 * 60;
   }
-  return true;
+  return false;
 }
 
 include 'blox_config.php';
