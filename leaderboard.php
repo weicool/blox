@@ -53,9 +53,9 @@ function recentlyRecorded($ip, $db) {
   if ($timeDiff = mysql_query($sql, $db)) {
     $timeDiff = mysql_fetch_array($timeDiff);
     $timeDiff = $timeDiff[0];
-    return intval($timeDiff) < 2 * 60;
+    return $timeDiff && intval($timeDiff) < 2 * 60;
   }
-  return false;
+  return true;
 }
 
 include 'blox_config.php';
