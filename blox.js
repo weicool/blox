@@ -839,7 +839,7 @@ Blox.Leaderboard = Class.create({
     if (!name) return;
     
     new Ajax.Updater('leaderboard', 'leaderboard.php', {
-      parameters: { 'name': name, 'score': score, 'level': level },
+      parameters: { 'name': name, 'score': score, 'level': level, 'cert': this.cert },
       onComplete: this.findLowestScore.bind(this)
     });
   },
@@ -848,7 +848,9 @@ Blox.Leaderboard = Class.create({
     this.lowestScore = Math.min(this.lowestScore,
       this.container.select("td.score").min(function(score) {
         return parseInt(score.innerHTML);
-      }) || this.lowestScore);
+      }));
+    
+    this.cert = $('cert').innerHTML;
   }
   
 });

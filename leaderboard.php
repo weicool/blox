@@ -1,12 +1,14 @@
 <?php
 
 function leaderboardRecords($db) {
-  $sql = "SELECT `name` as name, `score`, `level` FROM blox_leaderboard ORDER BY `score` DESC, `level` DESC LIMIT 13";
+  $sql = "SELECT `name` as name, `score`, `level` FROM blox_leaderboard ORDER BY `score` DESC, `level` DESC LIMIT 30";
   return mysql_query($sql, $db);
 }
 
-function addLeaderboardRecord($params, $db) {
-  if (!(isset($params['name']) && isset($params['score']) && isset($params['level']))) {
+function addLeaderboardRecord($params, $salt, $db) {
+  if (!(isset($params['name']) && 
+        isset($params['score']) && isset($params['level'])) &&
+        isset($params['cert'])) {
     return;
   }
   
@@ -19,15 +21,33 @@ function addLeaderboardRecord($params, $db) {
   $level = intval($params['level']);
   if ($level < 0 || $level > $score) return;
   
+  $cert = mysql_real_escape_string($params['cert'], $db);
+  
   $ip = mysql_real_escape_string(getIP(), $db);
+  
+  if (!validRecordRequest($score, $level, $cert, $ip, $salt, $db)) {
+    echo "Invalid recording request."; return;
+  }
   if (recentlyRecorded($ip, $db)) {
-    return;
+    echo "Recently recorded."; return;
   }
   
   $sql = "INSERT INTO blox_leaderboard (`name`, `score`, `level`, `ip`, `date`)
           VALUES ('{$name}', {$score}, {$level}, '{$ip}', NOW())";
-
   mysql_query($sql, $db);
+}
+
+/** Has this client just recently recorded a score? */
+function recentlyRecorded($ip, $db) {
+  return false; // disable for now
+  
+  $sql = "SELECT TIME_TO_SEC(TIMEDIFF(NOW(), MAX(`date`))) FROM blox_leaderboard WHERE ip = '{$ip}'";
+  if ($timeDiff = mysql_query($sql, $db)) {
+    $timeDiff = mysql_fetch_array($timeDiff);
+    $timeDiff = $timeDiff[0];
+    return $timeDiff && intval($timeDiff) < 2 * 60;
+  }
+  return true;
 }
 
 function getIP() {
@@ -47,16 +67,10 @@ function getIP() {
   return $ip;
 }
 
-/** Has this client just recently recorded a score? */
-function recentlyRecorded($ip, $db) {
-  $sql = "SELECT TIME_TO_SEC(TIMEDIFF(NOW(), MAX(`date`))) FROM blox_leaderboard WHERE ip = '{$ip}'";
-  if ($timeDiff = mysql_query($sql, $db)) {
-    $timeDiff = mysql_fetch_array($timeDiff);
-    $timeDiff = $timeDiff[0];
-    return $timeDiff && intval($timeDiff) < 2 * 60;
-  }
-  return true;
-}
+
+################################################################################
+################################################################################
+################################################################################
 
 include 'blox_config.php';
 
@@ -71,10 +85,11 @@ if (!mysql_select_db($bloxConfig['db']['db'], $db)) {
 }
 
 if (isset($_POST['score'])) {
-  addLeaderboardRecord($_POST, $db);
+  addLeaderboardRecord($_POST, $bloxConfig['salt'], $db);
 }
 
 $leaderboard = leaderboardRecords($db);
+$cert = encryptCert(makeCert($db), $bloxConfig['salt']);
 
 mysql_close($db);
 
@@ -82,6 +97,8 @@ mysql_close($db);
 
 
 <span class="label">Leaderboard</span>
+
+<div id="cert"><?php echo $cert; ?></div>
 
 <table>
   <tr>

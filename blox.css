@@ -69,7 +69,6 @@ h1 {
 }
 
 #leaderboard td, #leaderboard th {
-
   padding: 0.3em;
 }
 
@@ -91,6 +90,10 @@ h1 {
 
 #leaderboard th.level {
   width: 14%;
+}
+
+#cert {
+  display: none;
 }
 
 #misc {
