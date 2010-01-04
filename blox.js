@@ -95,6 +95,9 @@ Blox.Game = Class.create({
       case Blox.States.moving:
         if (this.activeBlock.canMoveDown()) {
           this.activeBlock.moveDown();
+          if (!this.activeBlock.canMoveDown()) {
+            this.activeBlock.dropping = false;
+          }
         } else {
           this.board.clear();
           this.state = Blox.States.new_block;
@@ -194,7 +197,7 @@ Blox.Game = Class.create({
       this.moveFastTimeout = null;
     }
     this.moveFastDir = moveDir;
-    this.moveFastTimeout = setTimeout(this.moveFast.bind(this), 250);
+    this.moveFastTimeout = setTimeout(this.moveFast.bind(this), 100);
   },
   
   /**
@@ -549,6 +552,7 @@ Blox.Block = Class.create({
     this.centerY = initY;
     this.centerX = initX;
     this.clockwise = true;
+    this.dropping = false;
   },
   
   /** Positions this Block on the given board. */
@@ -560,6 +564,8 @@ Blox.Block = Class.create({
       cell = board.board[this.centerY + pos.y][this.centerX + pos.x];
       this.cells[this.cells.length] = this.markCell(cell);
     }
+    
+    this.dropping = true;
   },
   
   /** 
@@ -580,13 +586,24 @@ Blox.Block = Class.create({
   
   /** Moves in the direction implied by the method name. */
   moveDown: function () { if (this.canMoveDown()) this.moveTo(this.shiftBy(1, 0)); },
-  moveLeft: function () { if (this.canMoveLeft()) this.moveTo(this.shiftBy(0, -1)); },
-  moveRight: function () { if (this.canMoveRight()) this.moveTo(this.shiftBy(0, 1)); },
+  
+  moveLeft: function () {
+    if (this.dropping && this.canMoveLeft()) {
+      this.moveTo(this.shiftBy(0, -1));
+    }
+  },
+  
+  moveRight: function () {
+    if (this.dropping && this.canMoveRight()) {
+      this.moveTo(this.shiftBy(0, 1));
+    }
+  },
   
   drop: function() {
     while (this.canMoveDown()) {
       this.moveTo(this.shiftBy(1, 0));
     }
+    this.dropping = false;
   },
   
   /**
