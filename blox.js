@@ -95,9 +95,6 @@ Blox.Game = Class.create({
       case Blox.States.moving:
         if (this.activeBlock.canMoveDown()) {
           this.activeBlock.moveDown();
-          if (!this.activeBlock.canMoveDown()) {
-            this.activeBlock.dropping = false;
-          }
         } else {
           this.board.clear();
           this.state = Blox.States.new_block;
