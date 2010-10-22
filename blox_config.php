@@ -1,10 +1,12 @@
 <?php
 
+include '/home/weicool/shared/config.inc.php';
+
 $bloxConfig = array(
     'db' => array(
-      'db' => 'd60650709',
-      'user' => 'u70718260',
-      'pass' => '2caa2f'
+      'db' => 'blox',
+      'user' => 'weicool',
+      'pass' => $dbpw['weicool']
     ),
     'salt' => 'thisniSAcVERYlsalty94367'
   );

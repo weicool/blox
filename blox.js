@@ -863,6 +863,7 @@ Blox.Leaderboard = Class.create({
       this.container.select("td.score").min(function(score) {
         return parseInt(score.innerHTML);
       }));
+    this.lowestScore = this.lowestScore || 0;
     
     this.cert = $('cert').innerHTML;
   }
