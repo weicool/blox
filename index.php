@@ -3,8 +3,9 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <title>Blox</title>
-  <meta name="keywords" content="blox, tetris, game, puzzle" />
-  <meta name="description" content="Blox is a fun Tetris clone with a charm of its own." />
+  <meta name="keywords" content="blox, tetromino, game, puzzle" />
+  <meta name="description" content="Blox is a fast-paced, action-packed puzzle game where you arrange falling tetrominoes to clear lines." />
+  <link rel="shortcut icon" href="images/favicon.ico" />
   <link rel="stylesheet" type="text/css" href="blox.css" />
 </head>
 
@@ -19,7 +20,21 @@
 <![endif]-->
 
 <div id="header">
-  <h1>b l <img src="images/block_o.png" alt="o" /> x</h1>
+  <div>
+    <div id="gg">
+      <script type="text/javascript"><!--
+        google_ad_client = "ca-pub-1751948200611368";
+        /* Blox Banner */
+        google_ad_slot = "7178631606";
+        google_ad_width = 468;
+        google_ad_height = 60;
+        //-->
+      </script>
+      <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+    </div>
+    
+    <h1>b l <img src="images/block_o.png" alt="o" /> x</h1>
+  </div>
 </div>
 
 <div id="content">
@@ -61,12 +76,18 @@
       </div>
     </div>
   </div>
+  
+  <embed id="sound_rotate" class="sfx" src="audio/rotate.wav" autostart="false" volume="10" />
+  <embed id="sound_clear" class="sfx" src="audio/clear.mp3" autostart="false" volume="10" />
+  <embed id="sound_clear_tetris" class="sfx" src="audio/clear_tetris.wav" autostart="false" volume="30" />
+  
 </div>
 
 <div id="footer">
   <div id="about" class="info">
     <p>
-    Blox is a Tetris clone featuring beautiful blocks, customizable controls,
+    Blox is a fast-paced, action-packed puzzle game where you arrange falling tetrominoes to clear lines.
+    It features beautiful tetrominoes, customizable controls,
     challenging gameplay, and a leaderboard to compete with players around the
     world. It was developed using HTML, CSS, and JavaScript.
     </p>
@@ -76,31 +97,19 @@
     </p>
     
     <p>
+    <iframe id="facebook_like" src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.facebook.com%2Fpages%2FBlox%2F177930138901026&amp;layout=standard&amp;show_faces=false&amp;width=450&amp;action=like&amp;colorscheme=dark&amp;height=35" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+    </p>
+    
+    <p>
     A <a href="http://weicool.net">weicool</a> production.
     Thanks to <a href="http://belkadan.com/tetris/">this game</a> for the inspiration, 
     <a href="mailto:kinkyoto@gmail.com">Mark</a> for the block shading, and all
     my friends for testing.
     </p>
   </div>
-  
-  <div id="ad">
-    <script type="text/javascript">
-      google_ad_client = "ca-pub-1751948200611368";
-      /* Blox Leaderboard */
-      google_ad_slot = "3209224473";
-      google_ad_width = 728;
-      google_ad_height = 90;
-    </script>
-    <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
-  </div>
-  
-  <embed id="bgmusic" class="sfx" src="audio/bgmusic.mid" autostart="false" loop="true" volume="50" />
-  <embed id="sound_rotate" class="sfx" src="audio/rotate.wav" autostart="false" volume="10" />
-  <embed id="sound_clear" class="sfx" src="audio/clear.mp3" autostart="false" volume="10" />
-  <embed id="sound_clear_tetris" class="sfx" src="audio/clear_tetris.wav" autostart="false" volume="30" />
 </div>
 
-<script type="text/javascript" src="../layout/js/prototype.js"></script>
+<script type="text/javascript" src="prototype.js"></script>
 <script type="text/javascript" src="blox.js"></script>
 
 </body>

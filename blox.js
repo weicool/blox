@@ -136,6 +136,7 @@ Blox.Game = Class.create({
   },
   
   move: function(event) {
+    event.stop();
     if (this.state === Blox.States.moving) {
       switch (event.keyCode) {
         /* Move */
@@ -792,7 +793,7 @@ Blox.Sounds = { bg: 1, rotate: 2, clear: 3, clear_tetris: 4 };
 Blox.Audio = Class.create({
   
   initialize: function() {
-    this.bgmusic = $("bgmusic");
+    this.bgmusic = null;
     this.soundRotate = $("sound_rotate");
     this.soundClear = $("sound_clear");
     this.soundClearTetris = $("sound_clear_tetris");
@@ -812,7 +813,7 @@ Blox.Audio = Class.create({
       case Blox.Sounds.clear_tetris: sound = this.soundClearTetris; break;
     }
     
-    if (sound.Play !== undefined) {
+    if (sound && sound.Play !== undefined) {
       sound.Play();
     }
   },
@@ -823,7 +824,7 @@ Blox.Audio = Class.create({
       case Blox.Sounds.bg: sound = this.bgmusic; break;
     }
     
-    if (sound.Play !== undefined) {
+    if (sound && sound.Play !== undefined) {
       sound.Stop();
     }
   },

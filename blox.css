@@ -19,15 +19,20 @@ a:hover {
   color: #0AE;
 }
 
+#header > div, #blox_container, #footer > div {
+  width: 750px;
+  margin: 0 auto;
+}
+
 #header {
   padding: 0.5em;
   border-bottom: 1px solid #444;
   text-align: center;
+  overflow: auto;
 }
 
-#blox_container, #footer div {
-  width: 750px;
-  margin: 0 auto;
+#gg {
+  float: right;
 }
 
 #header img {
@@ -35,8 +40,10 @@ a:hover {
   -moz-box-shadow: 1px 4px 20px #000;
 }
 
-h1 {
-  margin: 0 15.5em 0 0;
+#header h1 {
+  float: left;
+  padding: 6px;
+  margin: 0;
   font-size: 3.3em;
 }
 
@@ -45,7 +52,7 @@ h1 {
 }
 
 #blox_container {
-  padding: 2em 0;
+  padding: 2em 0 1.2em 0;
   margin-left: auto;
   margin-right: auto;
   overflow: auto;
@@ -54,7 +61,7 @@ h1 {
 #leaderboard {
   float: left;
   width: 20em;
-  margin-top: 1.4em;
+  margin-top: 1em;
 }
 
 #leaderboard .label {
@@ -147,18 +154,22 @@ h1 {
   margin-left: 0.5em;
 }
 
-#controls #flip_controls {
+#flip_controls {
   position: absolute;
   left: 9.8em;
-  top: 2em;
+  top: 1.8em;
   cursor: pointer;
+}
+
+#mute {
+  margin-left: 2em;
 }
 
 #controls form {
   margin-left: -4em;
 }
 
-.sfx {
+embed.sfx {
   height: 0;
   width: 0;
 }
@@ -167,7 +178,16 @@ h1 {
   clear: both;
   text-align: left;
   font-size: 0.9em;
+  line-height: 1.5em;
   color: #666;
+}
+
+#facebook_like {
+  border: none;
+  margin-top: 1.1em;
+  overflow: hidden;
+  width: 450px;
+  height: 35px;
 }
 
 .error {
@@ -188,7 +208,7 @@ h1 {
 }
 
 #footer p {
-  margin-bottom: 2.5em;
+  margin-bottom: 1.6em;
 }
 
 /***** Game *****/
