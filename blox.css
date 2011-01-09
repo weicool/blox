@@ -10,6 +10,10 @@ body {
   text-shadow: 0.1em 0.1em 2px #000;
 }
 
+#atom {
+  min-width: 430px;
+}
+
 a:link, a:visited, a:active {
   color: #09C;
   text-decoration: none; 
@@ -22,6 +26,10 @@ a:hover {
 #header > div, #blox_container, #footer > div {
   width: 750px;
   margin: 0 auto;
+}
+
+#atom #header > div, #atom #blox_container, #atom #footer > div {
+  width: 420px;
 }
 
 #header {
@@ -113,6 +121,10 @@ a:hover {
 #misc {
   width: 20em;
   float: right;
+}
+
+#atom #misc {
+  width: 13em;
 }
 
 #stats {

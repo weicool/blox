@@ -851,7 +851,7 @@ Blox.Leaderboard = Class.create({
   },
   
   record: function(name, score, level) {
-    if (!name) return;
+    if (!(this.container && name)) return;
     
     new Ajax.Updater('leaderboard', 'leaderboard.php', {
       parameters: { 'name': name, 'score': score, 'level': level, 'cert': this.cert },
@@ -860,6 +860,8 @@ Blox.Leaderboard = Class.create({
   },
   
   findLowestScore: function() {
+    if (!this.container) return;
+    
     this.lowestScore = Math.min(this.lowestScore,
       this.container.select("td.score").min(function(score) {
         return parseInt(score.innerHTML);
