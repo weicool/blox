@@ -41,6 +41,12 @@
   <div id="blox_container">
     <div id="leaderboard">
       <?php include 'leaderboard.php'; ?>
+      <p id="blox-atom-promo">
+        <a href="blox_atom.php" target="_blank"><b>Buy</b> Blox Atom</a>, the ad-free,<br /> offline Blox.
+      </p>
+      <p>
+        <iframe id="facebook-like" src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.facebook.com%2Fpages%2FBlox%2F177930138901026&amp;layout=standard&amp;show_faces=false&amp;width=450&amp;action=like&amp;colorscheme=dark&amp;height=35" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+      </p>
     </div>
     
     <table id="blox"></table>
@@ -93,16 +99,12 @@
     </p>
     
     <p>
-    If you like this game, please <a href="blox.php">rate and review it</a> on the Chrome Web Store!
-    </p>
-    
-    <p>
-    <iframe id="facebook_like" src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.facebook.com%2Fpages%2FBlox%2F177930138901026&amp;layout=standard&amp;show_faces=false&amp;width=450&amp;action=like&amp;colorscheme=dark&amp;height=35" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+    If you like this game, please <a href="blox.php" id="rate-link" target="_blank">rate and review it</a> on the Chrome Web Store!
     </p>
     
     <p>
     A <a href="http://weicool.net">weicool</a> production.
-    Thanks to <a href="http://belkadan.com/tetris/">this game</a> for the inspiration, 
+    Thanks to <a href="http://belkadan.com/tetris/" rel="nofollow">this game</a> for the inspiration,
     <a href="mailto:kinkyoto@gmail.com">Mark</a> for the block shading, and all
     my friends for testing.
     </p>

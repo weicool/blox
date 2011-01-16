@@ -36,7 +36,7 @@ a:hover {
   padding: 0.5em;
   border-bottom: 1px solid #444;
   text-align: center;
-  overflow: auto;
+  overflow: hidden;
 }
 
 #gg {
@@ -63,24 +63,24 @@ a:hover {
   padding: 2em 0 1.2em 0;
   margin-left: auto;
   margin-right: auto;
-  overflow: auto;
+  overflow: hidden;
 }
 
 #leaderboard {
   float: left;
-  width: 20em;
+  width: 19em;
   margin-top: 1em;
+  margin-left: 0.6em;
 }
 
 #leaderboard .label {
   font-size: 0.8em;
-  margin-left: 1.1em;
 }
 
 #leaderboard table {
   width: 75%;
-  margin-left: 1em;
   margin-top: 1em;
+  margin-bottom: 3em;
   border: 0;
   border-collapse: collapse;
   font-size: 0.9em;
@@ -112,6 +112,11 @@ a:hover {
 
 #leaderboard th.level {
   width: 14%;
+}
+
+#blox-atom-promo a b {
+  font-size: 1em;
+  color: #090;
 }
 
 #cert {
@@ -194,12 +199,12 @@ embed.sfx {
   color: #666;
 }
 
-#facebook_like {
+#facebook-like {
   border: none;
   margin-top: 1.1em;
   overflow: hidden;
-  width: 450px;
-  height: 35px;
+  width: 170px;
+  height: 40px;
 }
 
 .error {
@@ -221,6 +226,10 @@ embed.sfx {
 
 #footer p {
   margin-bottom: 1.6em;
+}
+
+#rate-link {
+  font-weight: bold;
 }
 
 /***** Game *****/

@@ -136,35 +136,39 @@ Blox.Game = Class.create({
   },
   
   move: function(event) {
-    event.stop();
     if (this.state === Blox.States.moving) {
       switch (event.keyCode) {
         /* Move */
         case Blox.Keys.left:
         case Blox.Keys.left_alt:
+          event.stop();
           if (this.moveFastDir) return;
           this.activeBlock.moveLeft();
           this.startMoveFast(this.activeBlock.moveLeft);
           break;
         case Blox.Keys.right:
         case Blox.Keys.right_alt:
+          event.stop();
           if (this.moveFastDir) return;
           this.activeBlock.moveRight();
           this.startMoveFast(this.activeBlock.moveRight);
           break;
         case Blox.Keys.down:
         case Blox.Keys.down_alt:
+          event.stop();
           if (this.moveFastDir) return;
           this.activeBlock.moveDown();
           this.startMoveFast(this.activeBlock.moveDown);
           break;
         case Blox.Keys.rotate:
         case Blox.Keys.rotate_alt:
+          event.stop();
           this.audio.play(Blox.Sounds.rotate);
           this.activeBlock.rotate();
           break;
         case Blox.Keys.drop:
         case Blox.Keys.drop_alt:
+          event.stop();
           this.activeBlock.drop();
           break;
         /* Other game control */

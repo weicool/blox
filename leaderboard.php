@@ -1,8 +1,37 @@
 <?php
 
 function leaderboardRecords($db) {
-  $sql = "SELECT `name` as name, `score`, `level` FROM blox_leaderboard ORDER BY `score` DESC, `level` DESC LIMIT 13";
-  return mysql_query($sql, $db);
+  $sql = "SELECT `name`, `score`, `level` FROM blox_leaderboard";
+  $results = mysql_query($sql, $db);
+  
+  /* Bucket by name. */
+  $stats_by_name = array();
+  while ($entry = mysql_fetch_assoc($results)) {
+    $name = $entry['name'];
+    $score = $entry['score'];
+    $level = $entry['level'];
+    if (array_key_exists($name, $stats_by_name)) {
+      $top_score_for_name = &$stats_by_name[$name];
+      if ($score > $top_score_for_name[0]) {
+        $top_score_for_name[0] = $score;
+        $top_score_for_name[1] = $level;
+      }
+    } else {
+      $stats_by_name[$name] = array($score, $level);
+    }
+  }
+  
+  /* To array and sort. */
+  $top_stats = array();
+  foreach ($stats_by_name as $name => $stats) {
+    $top_stats[] = array('name' => $name, 'score' => $stats[0], 'level' => $stats[1]);
+  }
+  usort($top_stats, 'sort_by_score_desc');
+  return array_splice($top_stats, 0, 10);
+}
+
+function sort_by_score_desc($a, $b) {
+  return $b['score'] - $a['score'];
 }
 
 function addLeaderboardRecord($params, $salt, $db) {
@@ -109,7 +138,7 @@ mysql_close($db);
   
 <?php
 
-while ($entry = mysql_fetch_assoc($leaderboard)) {
+foreach ($leaderboard as $entry) {
   echo "<tr><td>{$entry['name']}</td><td class=\"score\">{$entry['score']}</td><td>{$entry['level']}</td></tr>\n";
 }
 
