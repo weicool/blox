@@ -41,11 +41,15 @@
   <div id="blox_container">
     <div id="leaderboard">
       <?php include 'leaderboard.php'; ?>
+      <p id="blox-promo" style="display: none">
+        <a href="blox.php" target="_blank"><b>Install</b> Blox</a> for Chrome.
+      </p>
       <p id="blox-atom-promo">
         <a href="blox_atom.php" target="_blank"><b>Buy</b> Blox Atom</a>, the ad-free,<br /> offline Blox.
       </p>
-      <p>
-        <iframe id="facebook-like" src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.facebook.com%2Fpages%2FBlox%2F177930138901026&amp;layout=standard&amp;show_faces=false&amp;width=450&amp;action=like&amp;colorscheme=dark&amp;height=35" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+      <p id="social-promo">
+        <iframe id="facebook-like" src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.facebook.com%2Fbloxgame&amp;layout=box_count&amp;show_faces=false&amp;width=55&amp;action=like&amp;colorscheme=dark&amp;height=65" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+        <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://weicool.net/blox" data-text="Blox: A fast-paced, action-packed puzzle game where you arrange falling tetrominoes to clear lines." data-count="vertical">Tweet</a>
       </p>
     </div>
     
@@ -113,6 +117,12 @@
 
 <script type="text/javascript" src="prototype.js"></script>
 <script type="text/javascript" src="blox.js"></script>
+<script type="text/javascript">
+if (typeof chrome === 'undefined' || !chrome.app.isInstalled) {
+  $('blox-promo').show();
+}
+</script>
+<script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
 
 </body>
 </html>
