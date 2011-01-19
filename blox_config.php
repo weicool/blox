@@ -6,7 +6,7 @@ $bloxConfig = array(
     'db' => array(
       'db' => 'blox',
       'user' => 'weicool',
-      'pass' => $dbpw['weicool']
+      'pass' => 'soulcalibear1988'
     ),
     'salt' => 'thisniSAcVERYlsalty94367'
   );
@@ -35,7 +35,7 @@ function validRecordRequest($score, $level, $cert, $ip, $salt, $db) {
 /** Make a certificate and record it for later. */
 function makeCert($db) {
   $cert = strval(time());
-  $ip = mysql_real_escape_string(getIP(), $db);
+  $ip = mysql_real_escape_string(get_ip(), $db);
   
   $sql = "INSERT INTO blox_certs (`cert`, `ip`, `date`)
           VALUES ('{$cert}', '{$ip}', NOW())";
