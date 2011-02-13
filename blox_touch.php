@@ -10,7 +10,7 @@
   <link rel="shortcut icon" href="images/favicon.ico" />
   <link rel="stylesheet" type="text/css" href="blox.css" />
   <link rel="stylesheet" type="text/css" href="blox_touch.css" />
-  <link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="blox_phone.css" />
+  <link rel="stylesheet" type="text/css" media="(max-width: 455px)" href="blox_phone.css" />
   <meta name="viewport" content="width=device-width; user-scalable=no;" />
 </head>
 

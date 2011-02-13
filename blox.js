@@ -10,6 +10,8 @@ Blox.Speeds = { slowest: 550, fastest: 40 };
 Blox.Keys = { down: 83, down_alt: 40, left: 65, left_alt: 37, right: 68, right_alt: 39,
   up: 38, rotate: 38, rotate_alt: 87, drop: 32, drop_alt: 32, pause: 80 };
 
+Blox.Commands = { left: 1, down: 2, right: 3, rotate: 4, drop: 5, pause: 6 };
+
 Blox.States = { game_over: -1, paused: 0, new_game: 1, new_block: 2, moving: 3 };
 
 Blox.Game = Class.create({
@@ -37,7 +39,7 @@ Blox.Game = Class.create({
     this.linesContainer = $("lines");
     this.levelContainer = $("level");
     
-    Event.observe(document, "keydown", this.move.bind(this));
+    Event.observe(document, "keydown", this.keyPressed.bind(this));
     Event.observe(document, "keyup", this.stopMoveFast.bind(this));
     
     this.leaderboard = new Blox.Leaderboard();
@@ -138,52 +140,75 @@ Blox.Game = Class.create({
     Blox.startButton.enable();
   },
   
-  move: function(event) {
+  keyPressed: function(event) {
+    switch (event.keyCode) {
+      case Blox.Keys.left:
+      case Blox.Keys.left_alt:
+        this.move(Blox.Commands.left);
+        break;
+      case Blox.Keys.right:
+      case Blox.Keys.right_alt:
+        this.move(Blox.Commands.right);
+        break;
+      case Blox.Keys.down:
+      case Blox.Keys.down_alt:
+        this.move(Blox.Commands.down);
+        break;
+      case Blox.Keys.rotate:
+      case Blox.Keys.rotate_alt:
+        this.move(Blox.Commands.rotate);
+        break;
+      case Blox.Keys.drop:
+      case Blox.Keys.drop_alt:
+        this.move(Blox.Commands.drop);
+        break;
+      case Blox.Keys.pause:
+        this.move(Blox.Commands.pause);
+        break;
+    }
+  },
+  
+  move: function(command) {
     if (this.state === Blox.States.moving) {
-      switch (event.keyCode) {
+      switch (command) {
         /* Move */
-        case Blox.Keys.left:
-        case Blox.Keys.left_alt:
+        case Blox.Commands.left:
           event.stop();
           if (this.moveFastDir) return;
           this.activeBlock.moveLeft();
           this.startMoveFast(this.activeBlock.moveLeft);
           break;
-        case Blox.Keys.right:
-        case Blox.Keys.right_alt:
+        case Blox.Commands.right:
           event.stop();
           if (this.moveFastDir) return;
           this.activeBlock.moveRight();
           this.startMoveFast(this.activeBlock.moveRight);
           break;
-        case Blox.Keys.down:
-        case Blox.Keys.down_alt:
+        case Blox.Commands.down:
           event.stop();
           if (this.moveFastDir) return;
           this.activeBlock.moveDown();
           this.startMoveFast(this.activeBlock.moveDown);
           break;
-        case Blox.Keys.rotate:
-        case Blox.Keys.rotate_alt:
+        case Blox.Commands.rotate:
           event.stop();
           this.audio.play(Blox.Sounds.rotate);
           this.activeBlock.rotate();
           break;
-        case Blox.Keys.drop:
-        case Blox.Keys.drop_alt:
+        case Blox.Commands.drop:
           event.stop();
           this.activeBlock.drop();
           break;
         /* Other game control */
-        case Blox.Keys.pause:
+        case Blox.Commands.pause:
           this.container.addClassName("paused");
           this.stopTick();
           this.state = Blox.States.paused;
           break;
       }
     } else if (this.state === Blox.States.paused) {
-      switch (event.keyCode) {
-        case Blox.Keys.pause:
+      switch (command) {
+        case Blox.Commands.pause:
           this.container.removeClassName("paused");
           this.startTick();
           this.state = Blox.States.moving;
@@ -193,7 +218,7 @@ Blox.Game = Class.create({
   },
   
   /**
-   * Sets up a timeout callback to this.moveFast() to move block when keyis held down.
+   * Sets up a timeout callback to this.moveFast() to move block when key is held down.
    * Clears existing timeout to prevent a block from moving fast in more than one direction.
    */
   startMoveFast: function(moveDir) {
