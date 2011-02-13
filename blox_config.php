@@ -1,12 +1,16 @@
 <?php
 
-include '/home/weicool/shared/config.inc.php';
+if (true || $_SERVER['HTTP_HOST'] == 'localhost') {
+  include 'config.inc.php';
+} else {
+  include '/home/weicool/shared/config.inc.php';
+}
 
 $bloxConfig = array(
     'db' => array(
       'db' => 'blox',
       'user' => 'weicool',
-      'pass' => 'soulcalibear1988'
+      'pass' => $dbpw['weicool']
     ),
     'salt' => 'thisniSAcVERYlsalty94367'
   );

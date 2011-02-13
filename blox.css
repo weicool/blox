@@ -6,7 +6,7 @@ body {
   color: #999;
   padding: 0;
   margin: 0;
-  min-width: 760px;
+  min-width: 700px;
   text-shadow: 0.1em 0.1em 2px #000;
 }
 
@@ -16,7 +16,7 @@ body {
 
 a:link, a:visited, a:active {
   color: #09C;
-  text-decoration: none; 
+  text-decoration: none;
 }
 
 a:hover {
@@ -24,12 +24,15 @@ a:hover {
 }
 
 #header > div, #blox_container, #footer > div {
-  width: 750px;
+  width: 700px;
   margin: 0 auto;
 }
 
 #atom #header > div, #atom #blox_container, #atom #footer > div {
   width: 420px;
+}
+
+#blox_container {
 }
 
 #header {
@@ -48,11 +51,12 @@ a:hover {
   -moz-box-shadow: 1px 4px 20px #000;
 }
 
-#header h1 {
+h1 {
   float: left;
-  padding: 6px;
   margin: 0;
+  padding: 6px;
   font-size: 3.3em;
+  letter-spacing: 0.2em;
 }
 
 #content {
@@ -60,15 +64,13 @@ a:hover {
 }
 
 #blox_container {
-  padding: 2em 0 1.2em 0;
-  margin-left: auto;
-  margin-right: auto;
+  padding: 2em 0 1em 0;
   overflow: hidden;
 }
 
 #leaderboard {
   float: left;
-  width: 19em;
+  width: 16em;
   margin-top: 1em;
   margin-left: 0.6em;
 }
@@ -78,7 +80,7 @@ a:hover {
 }
 
 #leaderboard table {
-  width: 75%;
+  width: 100%;
   margin-top: 1em;
   margin-bottom: 2em;
   border: 0;
@@ -118,6 +120,11 @@ a:hover {
   margin: 1.5em 0;
 }
 
+#core {
+  float: right;
+  margin-right: 2em;
+}
+
 #blox-promo a b, #blox-atom-promo a b {
   font-size: 1em;
   color: #090;
@@ -128,12 +135,12 @@ a:hover {
   overflow: hidden;
   width: 55px;
   height: 65px;
-  margin-right: 1em;
+  margin-left: 0.7em;
 }
 
 .twitter-share-button {
-  margin-left: 1em;
-  margin-bottom: 0.2em;
+  position: relative;
+  top: -0.3em;
 }
 
 #cert {
@@ -141,8 +148,8 @@ a:hover {
 }
 
 #misc {
-  width: 20em;
-  float: right;
+  float: left;
+  margin-left: 2.5em;
 }
 
 #atom #misc {
@@ -150,11 +157,8 @@ a:hover {
 }
 
 #stats {
-  position: relative;
   list-style: none;
   padding-left: 0;
-  margin-left: 0;
-  margin-top: -0.5em;
 }
 
 #stats li {
@@ -259,6 +263,7 @@ embed.sfx {
 
 #next_container {
   position: relative;
+  clear: both;
 }
 
 #next {

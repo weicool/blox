@@ -44,7 +44,10 @@ Blox.Game = Class.create({
     
     /* controls setup */
     this.configureControls();
-    $("flip_controls").observe('click', this.flipControls.bind(this));
+    var flip_controls = $("flip_controls");
+    if (flip_controls) {
+      flip_controls.observe('click', this.flipControls.bind(this));
+    }
     
     /* audio setup */
     this.audio = new Blox.Audio();
@@ -302,6 +305,8 @@ Blox.Game = Class.create({
   flipControls: function() {
     var rotateControl = $$("#controls strong")[0];
     var dropControl = $$("#controls strong")[1];
+    
+    if (!rotateControl) return;
     
     var rotateControlText = rotateControl.innerHTML;
     rotateControl.innerHTML = dropControl.innerHTML;

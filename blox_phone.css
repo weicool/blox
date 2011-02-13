@@ -1,0 +1,31 @@
+body {
+  width: 430px;
+  min-width: 430px;
+}
+
+#header > div, #blox_container, #footer > div {
+  width: 430px;
+  margin: 0 auto;
+}
+
+#core {
+  margin-bottom: 2.5em;
+}
+
+#leaderboard {
+  float: none;
+  width: 100%;
+}
+
+#player-stats {
+  float: left;
+  margin-right: 3.5em;
+}
+
+#promo {
+  
+}
+
+#misc {
+  width: 150px;
+}

@@ -1,42 +1,20 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
+<!DOCTYPE html>
+<html lang=en>
+  <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <title>Blox</title>
   <meta name="keywords" content="blox, tetromino, game, puzzle" />
-  <meta name="description" content="Blox is a fast-paced, action-packed puzzle game where you arrange falling tetrominoes to clear lines." />
+  <meta name="description" content="Blox is a fast-paced, action-packed puzzle game where you arrange falling tetrominoes to clear lines. How long can you last?" />
   <meta property="og:image" content="http://weicool.net/blox/images/blox_icon.png" />
   <meta name="medium" content="game" />
   <link rel="shortcut icon" href="images/favicon.ico" />
   <link rel="stylesheet" type="text/css" href="blox.css" />
+  <link rel="stylesheet" type="text/css" href="blox_touch.css" />
+  <link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="blox_phone.css" />
+  <meta name="viewport" content="width=device-width; user-scalable=no;" />
 </head>
 
-<body>
-
-<!--[if lt IE 8]>
-<p class="error">
-  Blox is not compatible with Internet Explorer. Please use a more
-  modern browser, such as <a href="http://www.apple.com/safari">Safari</a> or
-  <a href="http://www.google.com/chrome">Chrome</a>.
-</p>
-<![endif]-->
-
-<div id="header">
-  <div>
-    <div id="gg">
-      <!-- <script type="text/javascript">
-        google_ad_client = "ca-pub-1751948200611368";
-        /* Blox Banner */
-        google_ad_slot = "7178631606";
-        google_ad_width = 468;
-        google_ad_height = 60;
-      </script>
-      <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script> -->
-    </div>
-    
-    <h1>blox</h1>
-  </div>
-</div>
+<body id="touch">
 
 <div id="content">
   <div id="blox_container">
@@ -44,6 +22,7 @@
       <table id="blox"></table>
       
       <div id="misc">
+        <h1>blox</h1>
         <div id="next_container">
           <span class="label">next</span>
           <table id="next">
@@ -59,13 +38,6 @@
         <input id="start_button" name="start_button" type="button" value="Start" />
         
         <div id="controls">
-          <span class="label">controls</span>
-          <img src="images/flip.png" id="flip_controls" alt="Flip buttons for rotating and dropping" title="Flip buttons for rotating and dropping" />
-          <ul>
-            <li><strong>up arrow</strong> rotates</li>
-            <li><strong>spacebar</strong> drops</li>
-            <li><strong>p</strong> pauses</li>
-          </ul>
           <ul>
           <form action="">
             <input type="checkbox" name="mute" id="mute" />
@@ -73,20 +45,32 @@
           </form>
         </div>
       </div>
+      <div id="buttons">
+        <div id="button-rotate" class="button"></div>
+        <div id="buttons-directional">
+          <div id="button-left" class="button"></div>
+          <div id="button-down" class="button"></div>
+          <div id="button-right" class="button"></div>
+        </div>
+      </div>
     </div>
     <div id="leaderboard">
-      <?php include 'leaderboard.php'; ?>
-      <p id="blox-promo" style="display: none">
-        <a href="blox.php" target="_blank"><b>Install</b> Blox</a> for Chrome.
-      </p>
-      <p id="blox-atom-promo">
-        <a href="blox_atom.php" target="_blank"><b>Buy</b> Blox Atom</a>, the ad-free,<br /> offline Blox.
-      </p>
-      <p id="social-promo">
-        <iframe id="facebook-like" src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.facebook.com%2Fbloxgame&amp;layout=box_count&amp;show_faces=false&amp;width=55&amp;action=like&amp;colorscheme=dark&amp;height=65" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
-        <a name="fb_share" type="box_count" share_url="http://weicool.net/blox" href="https://www.facebook.com/sharer.php">Share</a>
-        <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://weicool.net/blox" data-text="Blox: A fast-paced, action-packed puzzle game where you arrange falling tetrominoes to clear lines." data-count="vertical">Tweet</a>
-      </p>
+      <div id ="player-stats">
+        <?php include 'leaderboard.php'; ?>
+      </div>
+      <div id="promo">
+        <p id="social-promo">
+          <iframe id="facebook-like" src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.facebook.com%2Fbloxgame&amp;layout=box_count&amp;show_faces=false&amp;width=55&amp;action=like&amp;colorscheme=dark&amp;height=65" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+          <a name="fb_share" type="box_count" share_url="http://weicool.net/blox" href="https://www.facebook.com/sharer.php">Share</a>
+          <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://weicool.net/blox" data-text="Blox: A fast-paced, action-packed puzzle game where you arrange falling tetrominoes to clear lines." data-count="vertical">Tweet</a>
+        </p>
+        <p id="blox-promo" style="display: none">
+          <a href="blox.php" target="_blank"><b>Install</b> Blox</a> for Chrome.
+        </p>
+        <p id="blox-atom-promo">
+          <a href="blox_atom.php" target="_blank"><b>Buy</b> Blox Atom</a>, the ad-free, offline Blox.
+        </p>
+      </div>
     </div>
   </div>
   
