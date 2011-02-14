@@ -17,10 +17,14 @@ Blox.States = { game_over: -1, paused: 0, new_game: 1, new_block: 2, moving: 3 }
 Blox.Game = Class.create({
   
   initialize: function() {
+    Blox.game = this;
+    
     /* board setup */
     this.container = $("blox");
     this.board = new Blox.Board(this, this.container, 10, 20, 3);
     this.board.setUp();
+    
+    this.touch = $$('body')[0].hasClassName('touch');
     
     this.next = new Blox.Board(this, $("next"), 5, 3);
     this.next.setUp();
@@ -39,20 +43,57 @@ Blox.Game = Class.create({
     this.linesContainer = $("lines");
     this.levelContainer = $("level");
     
-    Event.observe(document, "keydown", this.keyPressed.bind(this));
-    Event.observe(document, "keyup", this.stopMoveFast.bind(this));
-    
     this.leaderboard = new Blox.Leaderboard();
     
     /* controls setup */
-    this.configureControls();
+    this.loadDefaultControls();
     var flip_controls = $("flip_controls");
     if (flip_controls) {
       flip_controls.observe('click', this.flipControls.bind(this));
     }
+    if (this.touch) {
+      this.initializeTouchControls();
+    }
+    Event.observe(document, "keydown", this.keyPressed.bind(this));
+    Event.observe(document, "keyup", this.stopMoveFast.bind(this));
     
     /* audio setup */
     this.audio = new Blox.Audio();
+  },
+  
+  initializeTouchControls: function() {
+    this.buttonLeft = $('button-left');
+    this.buttonRight = $('button-right');
+    this.buttonDown = $('button-down');
+    this.buttonRotate = $('button-rotate');
+    $('buttons').observe('mousedown', this.buttonClicked.bind(this));
+    $('buttons').observe('mouseup', this.stopMoveFast.bind(this));
+  },
+  
+  startButtonClicked: function() {
+    switch (this.state) {
+      case Blox.States.moving:
+        this.pauseGame();
+        break;
+      case Blox.States.paused:
+        this.resumeGame();
+        break;
+      default:
+        this.start();
+    }
+  },
+  
+  updateStartButton: function() {
+    switch (this.state) {
+      case Blox.States.game_over:
+        Blox.startButton.innerHTML = 'Start';
+        break;
+      case Blox.States.paused:
+        Blox.startButton.innerHTML = 'Resume';
+        break;
+      default:
+        Blox.startButton.innerHTML = 'Pause';
+    }
   },
   
   /***** Game Operation *****/
@@ -66,6 +107,7 @@ Blox.Game = Class.create({
     this.next.clearBoard();
     this.resetStats();
     this.startTick();
+    this.updateStartButton();
   },
   
   startTick: function() {
@@ -137,83 +179,82 @@ Blox.Game = Class.create({
     }
     
     this.stopTick();
-    Blox.startButton.enable();
+    this.updateStartButton();
   },
   
   keyPressed: function(event) {
     switch (event.keyCode) {
       case Blox.Keys.left:
       case Blox.Keys.left_alt:
-        this.move(Blox.Commands.left);
+        this.move(Blox.Commands.left, event);
         break;
       case Blox.Keys.right:
       case Blox.Keys.right_alt:
-        this.move(Blox.Commands.right);
+        this.move(Blox.Commands.right, event);
         break;
       case Blox.Keys.down:
       case Blox.Keys.down_alt:
-        this.move(Blox.Commands.down);
+        this.move(Blox.Commands.down, event);
         break;
       case Blox.Keys.rotate:
       case Blox.Keys.rotate_alt:
-        this.move(Blox.Commands.rotate);
+        this.move(Blox.Commands.rotate, event);
         break;
       case Blox.Keys.drop:
       case Blox.Keys.drop_alt:
-        this.move(Blox.Commands.drop);
+        this.move(Blox.Commands.drop, event);
         break;
       case Blox.Keys.pause:
-        this.move(Blox.Commands.pause);
+        this.startButtonClicked();
         break;
     }
   },
   
-  move: function(command) {
-    if (this.state === Blox.States.moving) {
-      switch (command) {
-        /* Move */
-        case Blox.Commands.left:
-          event.stop();
-          if (this.moveFastDir) return;
-          this.activeBlock.moveLeft();
-          this.startMoveFast(this.activeBlock.moveLeft);
-          break;
-        case Blox.Commands.right:
-          event.stop();
-          if (this.moveFastDir) return;
-          this.activeBlock.moveRight();
-          this.startMoveFast(this.activeBlock.moveRight);
-          break;
-        case Blox.Commands.down:
-          event.stop();
-          if (this.moveFastDir) return;
-          this.activeBlock.moveDown();
-          this.startMoveFast(this.activeBlock.moveDown);
-          break;
-        case Blox.Commands.rotate:
-          event.stop();
-          this.audio.play(Blox.Sounds.rotate);
-          this.activeBlock.rotate();
-          break;
-        case Blox.Commands.drop:
-          event.stop();
-          this.activeBlock.drop();
-          break;
-        /* Other game control */
-        case Blox.Commands.pause:
-          this.container.addClassName("paused");
-          this.stopTick();
-          this.state = Blox.States.paused;
-          break;
-      }
-    } else if (this.state === Blox.States.paused) {
-      switch (command) {
-        case Blox.Commands.pause:
-          this.container.removeClassName("paused");
-          this.startTick();
-          this.state = Blox.States.moving;
-          break;
-      }
+  buttonClicked: function(event) {
+    switch (event.element()) {
+      case this.buttonLeft:
+        this.move(Blox.Commands.left, event);
+        break;
+      case this.buttonRight:
+        this.move(Blox.Commands.right, event);
+        break;
+      case this.buttonDown:
+        this.move(Blox.Commands.down, event);
+        break;
+      case this.buttonRotate:
+        this.move(Blox.Commands.rotate, event);
+        break;
+    }
+  },
+  
+  move: function(command, event) {
+    if (this.state !== Blox.States.moving) return;
+    switch (command) {
+      case Blox.Commands.left:
+        event.stop();
+        if (this.moveFastDir) return;
+        this.activeBlock.moveLeft();
+        this.startMoveFast(this.activeBlock.moveLeft);
+        break;
+      case Blox.Commands.right:
+        event.stop();
+        if (this.moveFastDir) return;
+        this.activeBlock.moveRight();
+        this.startMoveFast(this.activeBlock.moveRight);
+        break;
+      case Blox.Commands.down:
+        if (this.moveFastDir) return;
+        this.activeBlock.moveDown();
+        this.startMoveFast(this.activeBlock.moveDown);
+        break;
+      case Blox.Commands.rotate:
+        this.activeBlock.rotate();
+        this.audio.play(Blox.Sounds.rotate);
+        break;
+      case Blox.Commands.drop:
+        event.stop();
+        this.activeBlock.drop();
+        break;
     }
   },
   
@@ -315,12 +356,24 @@ Blox.Game = Class.create({
     this.levelContainer.innerHTML = this.level;
   },
   
+  pauseGame: function() {
+    this.container.addClassName("paused");
+    this.stopTick();
+    this.state = Blox.States.paused;
+    this.updateStartButton();
+  },
+  
+  resumeGame: function() {
+    this.container.removeClassName("paused");
+    this.startTick();
+    this.state = Blox.States.moving;
+    this.updateStartButton();
+  },
+  
   /** Loads default controls from cookie. */
-  configureControls: function() {
+  loadDefaultControls: function() {
     var rotateButton = readCookie("blox_controls");
-    if (!rotateButton) {
-      return;
-    }
+    if (!rotateButton) return;
     rotateButton = parseInt(rotateButton);
     if (rotateButton != Blox.Keys.up) {
       this.flipControls();
@@ -442,8 +495,9 @@ Blox.Board = Class.create({
       
       this.animateClear();
       
-      var sound = this.rowsToClear.length == 4 ? Blox.Sounds.clear_tetris : Blox.Sounds.clear;
-      Blox.game.audio.play(sound);
+      Blox.game.audio.play(
+        this.rowsToClear.length == 4 ? Blox.Sounds.clear_tetris : Blox.Sounds.clear
+      );
     }
   },
   
@@ -687,8 +741,9 @@ Blox.Block = Class.create({
       newPos = newPositions[i];
       newY = newPos.y;
       newX = newPos.x;
-      if (!Blox.game.board.isValidCell(newY, newX) || 
-          (!Blox.game.board.canMarkCell(newY, newX) && !this.contains(Blox.game.board.board[newY][newX]))) {
+      if (!Blox.game.board.isValidCell(newY, newX) ||
+          (!Blox.game.board.canMarkCell(newY, newX) &&
+           !this.contains(Blox.game.board.board[newY][newX]))) {
         return false;
       }
     }
@@ -833,6 +888,9 @@ Blox.Audio = Class.create({
     this.soundClearTetris = $("sound_clear_tetris");
     
     this.mute = false;
+    if (Blox.game.touch) {
+      $("mute").checked = this.mute = true;
+    }
     $("mute").observe('change', this.toggleMute.bind(this));
   },
   
@@ -847,8 +905,8 @@ Blox.Audio = Class.create({
       case Blox.Sounds.clear_tetris: sound = this.soundClearTetris; break;
     }
     
-    if (sound && sound.Play !== undefined) {
-      sound.Play();
+    if (sound && sound.play !== undefined) {
+      sound.play();
     }
   },
   
@@ -858,8 +916,8 @@ Blox.Audio = Class.create({
       case Blox.Sounds.bg: sound = this.bgmusic; break;
     }
     
-    if (sound && sound.Play !== undefined) {
-      sound.Stop();
+    if (sound && sound.play !== undefined) {
+      sound.stop();
     }
   },
   
@@ -936,11 +994,8 @@ function readCookie(name) {
 /***** Main *****/
 
 document.observe("dom:loaded", function() {
-  Blox.game = new Blox.Game();
+  new Blox.Game();
   
   Blox.startButton = $("start_button");
-  Blox.startButton.observe("click", function () {
-    Blox.startButton.disable();
-    Blox.game.start();
-  });
+  Blox.startButton.observe("click", Blox.game.startButtonClicked.bind(Blox.game));
 });

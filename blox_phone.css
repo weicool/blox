@@ -9,7 +9,7 @@ body {
 }
 
 #core {
-  margin-bottom: 2.5em;
+  margin-bottom: 4em;
 }
 
 #leaderboard {
@@ -20,10 +20,6 @@ body {
 #player-stats {
   float: left;
   margin-right: 3.5em;
-}
-
-#promo {
-  
 }
 
 #misc {

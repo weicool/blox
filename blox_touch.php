@@ -12,9 +12,12 @@
   <link rel="stylesheet" type="text/css" href="blox_touch.css" />
   <link rel="stylesheet" type="text/css" media="(max-width: 455px)" href="blox_phone.css" />
   <meta name="viewport" content="width=device-width; user-scalable=no;" />
+  <link rel="apple-touch-icon" href="images/icon_128.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 </head>
 
-<body id="touch">
+<body class="touch">
 
 <div id="content">
   <div id="blox_container">
@@ -35,7 +38,7 @@
           <li><span class="label">level</span> <span id="level">0</span></li>
         </ul>
         
-        <input id="start_button" name="start_button" type="button" value="Start" />
+        <button id="start_button" name="start_button">Start</button>
         
         <div id="controls">
           <ul>
@@ -74,10 +77,17 @@
     </div>
   </div>
   
-  <embed id="sound_rotate" class="sfx" src="audio/rotate.wav" autostart="false" volume="10" />
-  <embed id="sound_clear" class="sfx" src="audio/clear.mp3" autostart="false" volume="10" />
-  <embed id="sound_clear_tetris" class="sfx" src="audio/clear_tetris.wav" autostart="false" volume="30" />
-  
+  <audio id="sound_rotate" class="sfx">
+    <source src="audio/rotate.mp3" />
+    <source src="audio/rotate.wav" />
+  </audio>
+  <audio id="sound_clear" class="sfx">
+    <source src="audio/clear.mp3" />
+    <source src="audio/clear.wav" />
+  </audio>
+  <audio id="sound_clear_tetris" class="sfx">
+    <source src="audio/clear_tetris.mp3" />
+  </audio>
 </div>
 
 <div id="footer">
