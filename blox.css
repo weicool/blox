@@ -256,12 +256,14 @@ embed.sfx {
 
 #blox {
   float: left;
+  min-width: 200px;
+  min-height: 400px;
+  background: #FBFBFB;
+  margin: 10px;
   -webkit-border-radius: 0.3em;
   -moz-border-radius: 0.3em;
   -webkit-box-shadow: 1px 4px 20px #000;
   -moz-box-shadow: 1px 4px 20px #000;
-  background: #FBFBFB;
-  margin: 10px;
 }
 
 #next_container {

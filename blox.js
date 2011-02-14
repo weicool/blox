@@ -66,8 +66,8 @@ Blox.Game = Class.create({
     this.buttonRight = $('button-right');
     this.buttonDown = $('button-down');
     this.buttonRotate = $('button-rotate');
-    $('buttons').observe('mousedown', this.buttonClicked.bind(this));
-    $('buttons').observe('mouseup', this.stopMoveFast.bind(this));
+    $('buttons').observe('touchstart', this.buttonClicked.bind(this));
+    $('buttons').observe('touchend', this.stopMoveFast.bind(this));
   },
   
   startButtonClicked: function() {
@@ -888,9 +888,6 @@ Blox.Audio = Class.create({
     this.soundClearTetris = $("sound_clear_tetris");
     
     this.mute = false;
-    if (Blox.game.touch) {
-      $("mute").checked = this.mute = true;
-    }
     $("mute").observe('change', this.toggleMute.bind(this));
   },
   

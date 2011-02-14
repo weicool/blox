@@ -1,7 +1,6 @@
 Blox
-Copyright © 2009-2010 Wei Yeh :: weicool@gmail.com
+Copyright © 2009-2011 Wei Yeh - weicool@gmail.com
 Developed on Mac OS X Snow Leopard
-
 
 #####################
 # Leaderboard
@@ -30,10 +29,3 @@ CREATE TABLE blox_certs (
 );
 
 DELETE FROM blox_certs WHERE TIME_TO_SEC(TIMEDIFF(NOW(), `date`)) >= 60 * 60 * 24;
-
-#####################
-# Credits
-#####################
-
-* Jordy Rose (http://belkadan.com/tetris/) for the inspiration
-* Mark Diaz (kinkyoto@gmail.com) for some of the graphics
