@@ -1,3 +1,14 @@
+<?php
+// error_reporting(E_ALL);
+// ini_set('display_errors', '1');
+
+/* Detect touch-based mobile devices and transfer if necessary. */
+$devices = "/(mobile|android)/i";
+if (preg_match($devices, $_SERVER['HTTP_USER_AGENT'])) {
+  header('Location: blox_touch.php');
+}
+?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -24,14 +35,14 @@
 <div id="header">
   <div>
     <div id="gg">
-      <!-- <script type="text/javascript">
+      <script type="text/javascript">
         google_ad_client = "ca-pub-1751948200611368";
         /* Blox Banner */
         google_ad_slot = "7178631606";
         google_ad_width = 468;
         google_ad_height = 60;
       </script>
-      <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script> -->
+      <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
     </div>
     
     <h1>blox</h1>

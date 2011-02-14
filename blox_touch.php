@@ -9,8 +9,7 @@
   <meta name="medium" content="game" />
   <link rel="shortcut icon" href="images/favicon.ico" />
   <link rel="stylesheet" type="text/css" href="blox.css" />
-  <link rel="stylesheet" type="text/css" href="blox_touch.css" />
-  <link rel="stylesheet" type="text/css" media="(max-width: 455px)" href="blox_phone.css" />
+  <link rel="stylesheet" type="text/css" media="(max-width: 410px)" href="blox_phone.css" />
   <meta name="viewport" content="width=device-width; user-scalable=no;" />
   <link rel="apple-touch-icon" href="images/icon_128.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -49,11 +48,11 @@
         </div>
       </div>
       <div id="buttons">
-        <div id="button-rotate" class="button"></div>
+        <div id="button-rotate-container" class="button-container"><div id="button-rotate" class="button" title="Rotate Button"></div></div>
         <div id="buttons-directional">
-          <div id="button-left" class="button"></div>
-          <div id="button-down" class="button"></div>
-          <div id="button-right" class="button"></div>
+          <div class="button-container"><div id="button-left" class="button" title="Left Button"></div></div>
+          <div id="button-down-container" class="button-container"><div id="button-down" class="button" title="Down Button"></div></div>
+          <div class="button-container"><div id="button-right" class="button" title="Rotate Button"></div></div>
         </div>
       </div>
     </div>

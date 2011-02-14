@@ -52,9 +52,10 @@ Blox.Game = Class.create({
       flip_controls.observe('click', this.flipControls.bind(this));
     }
     if (this.touch) {
+      window.scrollTo(0, 1);  // hide iPhone Safari address bar
       this.initializeTouchControls();
     }
-    Event.observe(document, "keydown", this.keyPressed.bind(this));
+    Event.observe(document, "keydown", this.keyDown.bind(this));
     Event.observe(document, "keyup", this.stopMoveFast.bind(this));
     
     /* audio setup */
@@ -66,12 +67,13 @@ Blox.Game = Class.create({
     this.buttonRight = $('button-right');
     this.buttonDown = $('button-down');
     this.buttonRotate = $('button-rotate');
-    $('buttons').observe('touchstart', this.buttonClicked.bind(this));
-    $('buttons').observe('touchend', this.stopMoveFast.bind(this));
+    $('buttons').observe('touchstart', this.buttonPressed.bind(this));
+    $('buttons').observe('touchend', this.depressButton.bind(this));
   },
   
   startButtonClicked: function() {
     switch (this.state) {
+      case Blox.States.new_block:
       case Blox.States.moving:
         this.pauseGame();
         break;
@@ -182,7 +184,7 @@ Blox.Game = Class.create({
     this.updateStartButton();
   },
   
-  keyPressed: function(event) {
+  keyDown: function(event) {
     switch (event.keyCode) {
       case Blox.Keys.left:
       case Blox.Keys.left_alt:
@@ -210,34 +212,60 @@ Blox.Game = Class.create({
     }
   },
   
-  buttonClicked: function(event) {
-    switch (event.element()) {
+  buttonPressed: function(event) {
+    var button = event.element();
+    var pressed = false;
+    switch (button) {
       case this.buttonLeft:
+        pressed = true;
         this.move(Blox.Commands.left, event);
         break;
       case this.buttonRight:
+        pressed = true;
         this.move(Blox.Commands.right, event);
         break;
       case this.buttonDown:
-        this.move(Blox.Commands.down, event);
+        pressed = true;
+        var oldTime = this.buttonDownTime;
+        this.buttonDownTime = new Date();
+        /* double-tap == drop */
+        if (this.buttonDownTime - oldTime < 250) {
+          this.move(Blox.Commands.drop, event);
+        } else {
+          this.move(Blox.Commands.down, event);
+        }
         break;
       case this.buttonRotate:
+        pressed = true;
         this.move(Blox.Commands.rotate, event);
         break;
     }
+    if (pressed) {
+      this.pressButton(button);
+    }
+  },
+  
+  pressButton: function(button) {
+    this.pressedButton = button;
+    button.parentElement.addClassName('pressed');
+  },
+  
+  depressButton: function() {
+    this.pressedButton.parentElement.removeClassName('pressed');
+    this.pressedButton = null;
+    this.stopMoveFast();
   },
   
   move: function(command, event) {
     if (this.state !== Blox.States.moving) return;
+    event.stop();
     switch (command) {
       case Blox.Commands.left:
-        event.stop();
         if (this.moveFastDir) return;
         this.activeBlock.moveLeft();
         this.startMoveFast(this.activeBlock.moveLeft);
         break;
       case Blox.Commands.right:
-        event.stop();
         if (this.moveFastDir) return;
         this.activeBlock.moveRight();
         this.startMoveFast(this.activeBlock.moveRight);
@@ -248,11 +276,10 @@ Blox.Game = Class.create({
         this.startMoveFast(this.activeBlock.moveDown);
         break;
       case Blox.Commands.rotate:
-        this.activeBlock.rotate();
         this.audio.play(Blox.Sounds.rotate);
+        this.activeBlock.rotate();
         break;
       case Blox.Commands.drop:
-        event.stop();
         this.activeBlock.drop();
         break;
     }
@@ -492,12 +519,10 @@ Blox.Board = Class.create({
     
     if (this.rowsToClear.length > 0) {
       this.game.stopTickInterval();
-      
-      this.animateClear();
-      
       Blox.game.audio.play(
-        this.rowsToClear.length == 4 ? Blox.Sounds.clear_tetris : Blox.Sounds.clear
+        this.rowsToClear.length == 4 ? Blox.Sounds.clear_tetris : Blox.Sounds.clear_regular
       );
+      this.animateClear();
     }
   },
   
@@ -877,7 +902,7 @@ Blox.BlockTypes = [Blox.O, Blox.I, Blox.S, Blox.Z, Blox.T, Blox.J, Blox.L];
 
 /** Audio */
 
-Blox.Sounds = { bg: 1, rotate: 2, clear: 3, clear_tetris: 4 };
+Blox.Sounds = { bg: 1, rotate: 2, clear_regular: 3, clear_tetris: 4 };
 
 Blox.Audio = Class.create({
   
@@ -898,7 +923,7 @@ Blox.Audio = Class.create({
     switch (sound) {
       case Blox.Sounds.bg: sound = this.bgmusic; break;
       case Blox.Sounds.rotate: sound = this.soundRotate; break;
-      case Blox.Sounds.clear: sound = this.soundClear; break;
+      case Blox.Sounds.clear_regular: sound = this.soundClear; break;
       case Blox.Sounds.clear_tetris: sound = this.soundClearTetris; break;
     }
     

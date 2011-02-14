@@ -1,15 +1,14 @@
 body {
-  width: 430px;
-  min-width: 430px;
+  min-width: 380px;
 }
 
 #header > div, #blox_container, #footer > div {
-  width: 430px;
+  width: 380px;
   margin: 0 auto;
 }
 
 #core {
-  margin-bottom: 4em;
+  margin-bottom: 3em;
 }
 
 #leaderboard {
@@ -23,5 +22,5 @@ body {
 }
 
 #misc {
-  width: 150px;
+  width: 100px;
 }
