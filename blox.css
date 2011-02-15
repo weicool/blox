@@ -207,7 +207,7 @@ h1 {
 }
 
 #controls form {
-  margin-left: -4em;
+  margin-left: -1.8em;
 }
 
 .info {
@@ -345,12 +345,12 @@ body.touch #blox_container {
 
 .button-container {
   display: inline-block;
-  width: 70px;
+  width: 80px;
   height: 70px;
   background: #AAA;
   background: -webkit-gradient(linear, left top, left bottom, from(#CCC), to(#999));
   background: -moz-linear-gradient(top, #CCC, #888);
-  margin-right: 5px;
+  margin-right: 14px;
   -webkit-box-shadow: 0px 1px 3px #000;
   -moz-box-shadow: 0px 1px 3px #000;
   -webkit-border-radius: 6px;
@@ -358,15 +358,14 @@ body.touch #blox_container {
 }
 
 #button-rotate-container {
-  float: right;
-  width: 90px;
+  width: 95px;
 }
 
 #button-down-container {
-  width: 40px;
+  width: 50px;
 }
 
-#buttons-directional .button-container:last-child {
+.button-container:last-child {
   margin-right: 0;
 }
 

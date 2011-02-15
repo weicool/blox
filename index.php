@@ -76,7 +76,6 @@ if (preg_match($devices, $_SERVER['HTTP_USER_AGENT'])) {
             <li><strong>up arrow</strong> rotates</li>
             <li><strong>spacebar</strong> drops</li>
           </ul>
-          <ul>
           <form action="">
             <input type="checkbox" name="mute" id="mute" />
             <label for="mute">mute</label>

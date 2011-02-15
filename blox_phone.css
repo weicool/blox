@@ -1,5 +1,5 @@
 body {
-  min-width: 380px;
+  min-width: 385px;
 }
 
 #header > div, #blox_container, #footer > div {
@@ -8,7 +8,9 @@ body {
 }
 
 #core {
-  margin-bottom: 3em;
+  width: 100%;
+  margin-right: 0;
+  margin-bottom: 2.5em;
 }
 
 #leaderboard {
@@ -18,9 +20,13 @@ body {
 
 #player-stats {
   float: left;
-  margin-right: 3.5em;
+  margin-right: 3em;
 }
 
 #misc {
   width: 100px;
+}
+
+#start_button {
+  margin-top: 10px;
 }

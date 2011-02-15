@@ -46,17 +46,18 @@ Blox.Game = Class.create({
     this.leaderboard = new Blox.Leaderboard();
     
     /* controls setup */
-    this.loadDefaultControls();
-    var flip_controls = $("flip_controls");
-    if (flip_controls) {
-      flip_controls.observe('click', this.flipControls.bind(this));
-    }
     if (this.touch) {
       window.scrollTo(0, 1);  // hide iPhone Safari address bar
       this.initializeTouchControls();
+    } else {
+      this.loadDefaultControls();
+      var flip_controls = $("flip_controls");
+      if (flip_controls) {
+        flip_controls.observe('click', this.flipControls.bind(this));
+      }
+      Event.observe(document, "keydown", this.keyDown.bind(this));
+      Event.observe(document, "keyup", this.stopMoveFast.bind(this));
     }
-    Event.observe(document, "keydown", this.keyDown.bind(this));
-    Event.observe(document, "keyup", this.stopMoveFast.bind(this));
     
     /* audio setup */
     this.audio = new Blox.Audio();
@@ -229,7 +230,7 @@ Blox.Game = Class.create({
         var oldTime = this.buttonDownTime;
         this.buttonDownTime = new Date();
         /* double-tap == drop */
-        if (this.buttonDownTime - oldTime < 250) {
+        if (this.buttonDownTime - oldTime < 400) {
           this.move(Blox.Commands.drop, event);
         } else {
           this.move(Blox.Commands.down, event);

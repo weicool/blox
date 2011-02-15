@@ -9,7 +9,7 @@
   <meta name="medium" content="game" />
   <link rel="shortcut icon" href="images/favicon.ico" />
   <link rel="stylesheet" type="text/css" href="blox.css" />
-  <link rel="stylesheet" type="text/css" media="(max-width: 410px)" href="blox_phone.css" />
+  <link rel="stylesheet" type="text/css" media="(max-width: 405px)" href="blox_phone.css" />
   <meta name="viewport" content="width=device-width; user-scalable=no;" />
   <link rel="apple-touch-icon" href="images/icon_128.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -41,6 +41,8 @@
         
         <div id="controls">
           <ul>
+            <li><strong>double tap ▼</strong> to drop</li>
+          </ul>
           <form action="">
             <input type="checkbox" name="mute" id="mute" />
             <label for="mute">mute</label>
@@ -48,14 +50,13 @@
         </div>
       </div>
       <div id="buttons">
+        <div class="button-container"><div id="button-left" class="button" title="Left Button"></div></div>
+        <div id="button-down-container" class="button-container"><div id="button-down" class="button" title="Down Button"></div></div>
         <div id="button-rotate-container" class="button-container"><div id="button-rotate" class="button" title="Rotate Button"></div></div>
-        <div id="buttons-directional">
-          <div class="button-container"><div id="button-left" class="button" title="Left Button"></div></div>
-          <div id="button-down-container" class="button-container"><div id="button-down" class="button" title="Down Button"></div></div>
-          <div class="button-container"><div id="button-right" class="button" title="Rotate Button"></div></div>
-        </div>
+        <div class="button-container"><div id="button-right" class="button" title="Right Button"></div></div>
       </div>
     </div>
+    
     <div id="leaderboard">
       <div id ="player-stats">
         <?php include 'leaderboard.php'; ?>
@@ -87,6 +88,19 @@
   <audio id="sound_clear_tetris" class="sfx">
     <source src="audio/clear_tetris.mp3" />
   </audio>
+</div>
+
+<div>
+<script type="text/javascript">
+var admob_vars = {
+ pubid: 'a14d5a2c65a98f8', // publisher id
+ bgcolor: '45973F', // background color (hex)
+ text: 'FFFFFF', // font-color (hex)
+ ama: false, // set to true and retain comma for the AdMob Adaptive Ad Unit, a special ad type designed for PC sites accessed from the iPhone.  More info: http://developer.admob.com/wiki/IPhone#Web_Integration
+ test: true // test mode, set to false to receive live ads
+};
+</script>
+<script type="text/javascript" src="http://mmv.admob.com/static/iphone/iadmob.js"></script>
 </div>
 
 <div id="footer">
