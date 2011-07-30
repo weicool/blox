@@ -88,12 +88,6 @@ if (preg_match($devices, $_SERVER['HTTP_USER_AGENT'])) {
     </div>
     <div id="leaderboard">
       <?php include 'leaderboard.php'; ?>
-      <p id="blox-promo" style="display: none">
-        <a href="blox.php" target="_blank"><b>Install</b> Blox</a> for Chrome.
-      </p>
-      <p id="blox-atom-promo">
-        <a href="blox_atom.php" target="_blank"><b>Buy</b> Blox Atom</a>, the ad-free,<br /> offline Blox.
-      </p>
       <p id="social-promo">
         <div id="fb-root"></div>
         <script src="http://connect.facebook.net/en_US/all.js#appId=208164312555656&amp;xfbml=1"></script>
@@ -105,6 +99,12 @@ if (preg_match($devices, $_SERVER['HTTP_USER_AGENT'])) {
           colorscheme="dark"
           font="">
         </fb:like>
+      </p>
+      <p id="blox-promo" style="display: none">
+        <a href="blox.php" target="_blank"><b>Install</b> Blox</a> for Chrome.
+      </p>
+      <p id="blox-atom-promo">
+        <a href="blox_atom.php" target="_blank"><b>Buy</b> Blox Atom</a>, the ad-free,<br /> offline Blox.
       </p>
     </div>
   </div>

@@ -33,6 +33,13 @@ a:hover {
 }
 
 #blox_container {
+  padding: 2em 0 1em 0;
+}
+
+#blox_container:after {
+  clear: both;
+  content: " ";
+  display: block;
 }
 
 #header {
@@ -61,11 +68,6 @@ h1 {
 
 #content {
   background: #333 url('images/bg.png');
-}
-
-#blox_container {
-  padding: 2em 0 1em 0;
-  overflow: hidden;
 }
 
 #leaderboard {
