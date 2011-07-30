@@ -519,10 +519,10 @@ Blox.Board = Class.create({
     }
     
     if (this.rowsToClear.length > 0) {
-      this.game.stopTickInterval();
       Blox.game.audio.play(
         this.rowsToClear.length == 4 ? Blox.Sounds.clear_tetris : Blox.Sounds.clear_regular
       );
+      this.game.stopTickInterval();
       this.animateClear();
     }
   },
@@ -917,11 +917,11 @@ Blox.Audio = Class.create({
     $("mute").observe('change', this.toggleMute.bind(this));
   },
   
-  play: function(sound) {
+  play: function(soundToPlay) {
     if (this.mute) return;
     
     var sound;
-    switch (sound) {
+    switch (soundToPlay) {
       case Blox.Sounds.bg: sound = this.bgmusic; break;
       case Blox.Sounds.rotate: sound = this.soundRotate; break;
       case Blox.Sounds.clear_regular: sound = this.soundClear; break;

@@ -16,7 +16,10 @@ if (preg_match($devices, $_SERVER['HTTP_USER_AGENT'])) {
   <title>Blox</title>
   <meta name="keywords" content="blox, tetromino, game, puzzle" />
   <meta name="description" content="Blox is a fast-paced, action-packed puzzle game where you arrange falling tetrominoes to clear lines." />
+  <meta property="og:title" content="Blox" />
+  <meta property="og:type" content="game" />
   <meta property="og:image" content="http://weicool.net/blox/images/blox_icon.png" />
+  <meta property="og:url" content="http://weicool.net/blox/" />
   <meta name="medium" content="game" />
   <link rel="shortcut icon" href="images/favicon.ico" />
   <link rel="stylesheet" type="text/css" href="blox.css" />
@@ -92,9 +95,16 @@ if (preg_match($devices, $_SERVER['HTTP_USER_AGENT'])) {
         <a href="blox_atom.php" target="_blank"><b>Buy</b> Blox Atom</a>, the ad-free,<br /> offline Blox.
       </p>
       <p id="social-promo">
-        <iframe id="facebook-like" src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.facebook.com%2Fbloxgame&amp;layout=box_count&amp;show_faces=false&amp;width=55&amp;action=like&amp;colorscheme=dark&amp;height=65" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
-        <a name="fb_share" type="box_count" share_url="http://weicool.net/blox" href="https://www.facebook.com/sharer.php">Share</a>
-        <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://weicool.net/blox" data-text="Blox: A fast-paced, action-packed puzzle game where you arrange falling tetrominoes to clear lines." data-count="vertical">Tweet</a>
+        <div id="fb-root"></div>
+        <script src="http://connect.facebook.net/en_US/all.js#appId=208164312555656&amp;xfbml=1"></script>
+        <fb:like href="https://www.facebook.com/bloxgame"
+          send="true"
+          layout="button_count"
+          width="190"
+          show_faces="true"
+          colorscheme="dark"
+          font="">
+        </fb:like>
       </p>
     </div>
   </div>
@@ -141,8 +151,6 @@ if (typeof chrome === 'undefined' || !chrome.app.isInstalled) {
   $('blox-promo').show();
 }
 </script>
-<script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
-<script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
 
 </body>
 </html>

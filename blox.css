@@ -130,14 +130,6 @@ h1 {
   color: #090;
 }
 
-#facebook-like {
-  border: none;
-  overflow: hidden;
-  width: 55px;
-  height: 65px;
-  margin-left: 0.7em;
-}
-
 .twitter-share-button {
   position: relative;
   top: -0.3em;

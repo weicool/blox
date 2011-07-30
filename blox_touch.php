@@ -63,9 +63,16 @@
       </div>
       <div id="promo">
         <p id="social-promo">
-          <iframe id="facebook-like" src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.facebook.com%2Fbloxgame&amp;layout=box_count&amp;show_faces=false&amp;width=55&amp;action=like&amp;colorscheme=dark&amp;height=65" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
-          <a name="fb_share" type="box_count" share_url="http://weicool.net/blox" href="https://www.facebook.com/sharer.php">Share</a>
-          <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://weicool.net/blox" data-text="Blox: A fast-paced, action-packed puzzle game where you arrange falling tetrominoes to clear lines." data-count="vertical">Tweet</a>
+          <div id="fb-root"></div>
+          <script src="http://connect.facebook.net/en_US/all.js#appId=208164312555656&amp;xfbml=1"></script>
+          <fb:like href="https://www.facebook.com/bloxgame"
+            send="true"
+            layout="box_count"
+            width="55"
+            show_faces="true"
+            colorscheme="dark"
+            font="">
+          </fb:like>
         </p>
         <p id="blox-promo" style="display: none">
           <a href="blox.php" target="_blank"><b>Install</b> Blox</a> for Chrome.
@@ -97,7 +104,7 @@ var admob_vars = {
  bgcolor: '45973F', // background color (hex)
  text: 'FFFFFF', // font-color (hex)
  ama: false, // set to true and retain comma for the AdMob Adaptive Ad Unit, a special ad type designed for PC sites accessed from the iPhone.  More info: http://developer.admob.com/wiki/IPhone#Web_Integration
- test: true // test mode, set to false to receive live ads
+ test: false
 };
 </script>
 <script type="text/javascript" src="http://mmv.admob.com/static/iphone/iadmob.js"></script>
@@ -132,8 +139,6 @@ if (typeof chrome === 'undefined' || !chrome.app.isInstalled) {
   $('blox-promo').show();
 }
 </script>
-<script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
-<script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
 
 </body>
 </html>
