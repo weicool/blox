@@ -12,6 +12,15 @@ if (preg_match($devices, $_SERVER['HTTP_USER_AGENT'])) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NF0STKBPR5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NF0STKBPR5');
+  </script>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <title>Blox</title>
   <meta name="keywords" content="blox, tetromino, game, puzzle" />
@@ -139,12 +148,3 @@ if (preg_match($devices, $_SERVER['HTTP_USER_AGENT'])) {
 
 </body>
 </html>
-
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-var pageTracker = _gat._getTracker("UA-297936-3");
-pageTracker._trackPageview();
-</script>
