@@ -1,0 +1,17 @@
+{
+  "name": "Blox",
+  "description": "Arrange falling tetrominoes to clear lines in this fast-paced, action-packed puzzle game.",
+  "version": "1.2.5",
+  "app": {
+    "urls": [
+      "http://weicool.net/blox"
+    ],
+    "launch": {
+      "web_url": "http://weicool.net/blox"
+    }
+  },
+  "icons": {
+    "16": "icon_16.png",
+    "128": "icon_128.png"
+  }
+}

@@ -1,0 +1,302 @@
+/***** Layout *****/
+
+body {
+  font: 12px "Lucida Grande", "Lucida Sans Unicode", verdana, sans-serif;
+  background: #222 url('images/bg_dark.png');
+  color: #999;
+  padding: 0;
+  margin: 0;
+  min-width: 760px;
+  text-shadow: 0.1em 0.1em 2px #000;
+}
+
+#atom {
+  min-width: 430px;
+}
+
+a:link, a:visited, a:active {
+  color: #09C;
+  text-decoration: none; 
+}
+
+a:hover {
+  color: #0AE;
+}
+
+#header > div, #blox_container, #footer > div {
+  width: 750px;
+  margin: 0 auto;
+}
+
+#atom #header > div, #atom #blox_container, #atom #footer > div {
+  width: 420px;
+}
+
+#header {
+  padding: 0.5em;
+  border-bottom: 1px solid #444;
+  text-align: center;
+  overflow: auto;
+}
+
+#gg {
+  float: right;
+}
+
+#header img {
+  -webkit-box-shadow: 1px 0px 15px #0AE;
+  -moz-box-shadow: 1px 4px 20px #000;
+}
+
+#header h1 {
+  float: left;
+  padding: 6px;
+  margin: 0;
+  font-size: 3.3em;
+}
+
+#content {
+  background: #333 url('images/bg.png');
+}
+
+#blox_container {
+  padding: 2em 0 1.2em 0;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: auto;
+}
+
+#leaderboard {
+  float: left;
+  width: 20em;
+  margin-top: 1em;
+}
+
+#leaderboard .label {
+  font-size: 0.8em;
+  margin-left: 1.1em;
+}
+
+#leaderboard table {
+  width: 75%;
+  margin-left: 1em;
+  margin-top: 1em;
+  border: 0;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+#leaderboard tr:nth-child(odd) {
+  background: #2B2B2B;
+}
+
+#leaderboard td, #leaderboard th {
+  padding: 0.3em;
+}
+
+#leaderboard th {
+  background: #222;
+}
+
+#leaderboard td {
+  text-align: right;
+}
+
+#leaderboard td:first-child {
+  text-align: left;
+}
+
+#leaderboard th.name {
+  width: 60%;
+}
+
+#leaderboard th.level {
+  width: 14%;
+}
+
+#cert {
+  display: none;
+}
+
+#misc {
+  width: 20em;
+  float: right;
+}
+
+#atom #misc {
+  width: 13em;
+}
+
+#stats {
+  position: relative;
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0;
+  margin-top: -0.5em;
+}
+
+#stats li {
+  margin-bottom: 1em;
+  font-size: 0.8em;
+}
+
+#score, #lines, #level {
+  display: block;
+  font-size: 2em;
+  margin-left: 5px;
+}
+
+#start_button {
+  margin-top: 25px;
+}
+
+#controls {
+  position: relative;
+  margin-top: 35px;
+}
+
+#controls .label {
+  font-size: 0.8em;
+}
+
+#controls ul {
+  font-size: 0.9em;
+  padding-left: 1.5em;
+  margin-top: 0.5em;
+  margin-left: 0.5em;
+}
+
+#flip_controls {
+  position: absolute;
+  left: 9.8em;
+  top: 1.8em;
+  cursor: pointer;
+}
+
+#mute {
+  margin-left: 2em;
+}
+
+#controls form {
+  margin-left: -4em;
+}
+
+embed.sfx {
+  height: 0;
+  width: 0;
+}
+
+.info {
+  clear: both;
+  text-align: left;
+  font-size: 0.9em;
+  line-height: 1.5em;
+  color: #666;
+}
+
+#facebook_like {
+  border: none;
+  margin-top: 1.1em;
+  overflow: hidden;
+  width: 450px;
+  height: 35px;
+}
+
+.error {
+  margin: 30px;
+  text-align: center;
+  color: #F00;
+  font-weight: bold;
+}
+
+.label {
+  color: #09C;
+}
+
+#footer {
+  clear: both;
+  padding: 0.5em;
+  border-top: 2px solid #1C1C1C;
+}
+
+#footer p {
+  margin-bottom: 1.6em;
+}
+
+/***** Game *****/
+
+#blox, #next {
+  border-collapse: collapse;
+}
+
+#blox {
+  float: left;
+  -webkit-border-radius: 0.3em;
+  -moz-border-radius: 0.3em;
+  -webkit-box-shadow: 1px 4px 20px #000;
+  -moz-box-shadow: 1px 4px 20px #000;
+  background: #FBFBFB;
+  margin: 10px;
+}
+
+#next_container {
+  position: relative;
+}
+
+#next {
+  margin-top: 1.5em;
+  margin-left: -1em;
+}
+
+#next_container span {
+  position: relative;
+  top: 1.5em;
+  font-size: 0.8em;
+}
+
+#blox td, #next td {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+#blox tr.hidden {
+  visibility: hidden;
+}
+
+.block_o {
+  background-color: orange;
+}
+
+.block_i {
+  background-color: red;
+}
+
+.block_s {
+  background-color: #AEFF00;
+}
+
+.block_z {
+  background-color: magenta;
+}
+
+.block_j {
+  background-color: aqua;
+}
+
+.block_l {
+  background-color: lime;
+}
+
+.block_t {
+  background-color: yellow;
+}
+
+.block_o, .block_i, .block_s, .block_z, .block_j, .block_l, .block_t {
+  background-image: url('images/block_bg.png');
+}
+
+.paused {
+  opacity: 0.3;
+}

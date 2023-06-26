@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <title>Blox Atom</title>
+  <meta name="keywords" content="blox, tetromino, game, puzzle" />
+  <meta name="description" content="Blox Atom is a fast-paced, action-packed puzzle game where you arrange falling tetrominoes to clear lines." />
+  <link rel="shortcut icon" href="images/favicon.ico" />
+  <link rel="stylesheet" type="text/css" href="blox.css" />
+</head>
+
+<body id="atom">
+
+<div id="header">
+  <div>
+    <h1>b l <img src="images/block_o.png" alt="o" /> x</h1>
+  </div>
+</div>
+
+<div id="content">
+  <div id="blox_container">
+    <table id="blox"></table>
+    
+    <div id="misc">
+      <div id="next_container">
+        <span class="label">next</span>
+        <table id="next">
+        </table>
+      </div>
+      
+      <ul id="stats">
+        <li><span class="label">score</span> <span id="score">0</span></li>
+        <li><span class="label">lines</span> <span id="lines">0</span></li>
+        <li><span class="label">level</span> <span id="level">0</span></li>
+      </ul>
+      
+      <input id="start_button" name="start_button" type="button" value="Start" />
+      
+      <div id="controls">
+        <span class="label">controls</span>
+        <img src="images/flip.png" id="flip_controls" alt="Flip buttons for rotating and dropping" title="Flip buttons for rotating and dropping" />
+        <ul>
+          <li><strong>up arrow</strong> rotates</li>
+          <li><strong>spacebar</strong> drops</li>
+          <li><strong>p</strong> pauses</li>
+        </ul>
+        <ul>
+        <form action="">
+          <input type="checkbox" name="mute" id="mute" />
+          <label for="mute">mute</label>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <embed id="sound_rotate" class="sfx" src="audio/rotate.wav" autostart="false" volume="10" />
+  <embed id="sound_clear" class="sfx" src="audio/clear.mp3" autostart="false" volume="10" />
+  <embed id="sound_clear_tetris" class="sfx" src="audio/clear_tetris.wav" autostart="false" volume="30" />
+  
+</div>
+
+<div id="footer">
+  <div id="about" class="info">
+    <p>
+    If you like Blox Atom, please <a href="http://weicool.net/blox/blox_atom.php">rate and review it</a>.
+    </p>
+    
+    <p>A <a href="http://weicool.net">weicool</a> production.</p>
+  </div>
+</div>
+
+<script type="text/javascript" src="prototype.js"></script>
+<script type="text/javascript" src="blox.js"></script>
+
+</body>
+</html>

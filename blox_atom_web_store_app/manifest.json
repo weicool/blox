@@ -1,0 +1,15 @@
+{
+  "name": "Blox Atom",
+  "description": "Arrange falling tetrominoes to clear lines in this fast-paced, action-packed puzzle game. Ad-free and no internet connection needed.",
+  "version": "1.2.1",
+  "app": {
+    "launch": {
+      "local_path": "blox_atom.html"
+    }
+  },
+  "homepage_url": "http://weicool.net/blox",
+  "icons": {
+    "16": "images/icon_16.png",
+    "128": "images/icon_128.png"
+  }
+}
