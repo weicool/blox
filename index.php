@@ -100,12 +100,6 @@ if (preg_match($devices, $_SERVER['HTTP_USER_AGENT'])) {
           font="">
         </fb:like>
       </p>
-      <p id="blox-promo" style="display: none">
-        <a href="blox.php" target="_blank"><b>Install</b> Blox</a> for Chrome.
-      </p>
-      <p id="blox-atom-promo">
-        <a href="blox_atom.php" target="_blank"><b>Buy</b> Blox Atom</a>, the ad-free,<br /> offline Blox.
-      </p>
     </div>
   </div>
   
@@ -132,10 +126,6 @@ if (preg_match($devices, $_SERVER['HTTP_USER_AGENT'])) {
     </p>
     
     <p>
-    If you like this game, please <a href="blox.php" id="rate-link" target="_blank">rate and review it</a> on the Chrome Web Store!
-    </p>
-    
-    <p>
     A <a href="http://weicool.net">weicool</a> production.
     Thanks to <a href="http://belkadan.com/tetris/" rel="nofollow">this game</a> for the inspiration,
     <a href="mailto:kinkyoto@gmail.com">Mark</a> for the block shading, and all
@@ -146,11 +136,6 @@ if (preg_match($devices, $_SERVER['HTTP_USER_AGENT'])) {
 
 <script type="text/javascript" src="prototype.js"></script>
 <script type="text/javascript" src="blox.js"></script>
-<script type="text/javascript">
-if (typeof chrome === 'undefined' || !chrome.app.isInstalled) {
-  $('blox-promo').show();
-}
-</script>
 
 </body>
 </html>

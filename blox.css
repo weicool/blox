@@ -127,11 +127,6 @@ h1 {
   margin-right: 2em;
 }
 
-#blox-promo a b, #blox-atom-promo a b {
-  font-size: 1em;
-  color: #090;
-}
-
 .twitter-share-button {
   position: relative;
   top: -0.3em;
@@ -231,10 +226,6 @@ h1 {
 
 #footer p {
   margin-bottom: 1.6em;
-}
-
-#rate-link {
-  font-weight: bold;
 }
 
 /***** Game *****/
