@@ -1,7 +1,7 @@
 <?php
 
-// error_reporting(E_ALL);
-// ini_set('display_errors', '1');
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 
 function leaderboard_records($db) {
   $sql = "
@@ -17,11 +17,11 @@ function leaderboard_records($db) {
   ORDER BY score DESC
   LIMIT 10;
   ";
-  $results = mysql_query($sql, $db);
+  $results = mysqli_query($db, $sql);
   
   /* Bucket by name. */
   $records = array();
-  while ($entry = mysql_fetch_assoc($results)) {
+  while ($entry = mysqli_fetch_assoc($results)) {
     $records[] = $entry;
   }
   return $records;
@@ -34,7 +34,7 @@ function add_leaderboard_record($params, $salt, $db) {
     return;
   }
   
-  $name = mysql_real_escape_string(substr(trim($params['name']), 0, 16), $db);
+  $name = mysqli_real_escape_string($db, substr(trim($params['name']), 0, 16));
   if (strlen($name) == 0) {
     $name = 'Anonymous';
   }
@@ -43,9 +43,9 @@ function add_leaderboard_record($params, $salt, $db) {
   $level = intval($params['level']);
   if ($level < 0 || $level > $score) return;
   
-  $cert = mysql_real_escape_string($params['cert'], $db);
+  $cert = mysqli_real_escape_string($db, $params['cert']);
   
-  $ip = mysql_real_escape_string(get_ip(), $db);
+  $ip = mysqli_real_escape_string($db, get_ip());
   
   if (!validRecordRequest($score, $level, $cert, $ip, $salt, $db)) {
     echo "Invalid recording request."; return;
@@ -56,7 +56,7 @@ function add_leaderboard_record($params, $salt, $db) {
   
   $sql = "INSERT INTO blox_leaderboard (`name`, `score`, `level`, `ip`, `date`)
           VALUES ('{$name}', {$score}, {$level}, '{$ip}', NOW())";
-  mysql_query($sql, $db);
+  mysqli_query($db, $sql);
 }
 
 /** Has this client just recently recorded a score? */
@@ -64,8 +64,8 @@ function recently_recorded($ip, $db) {
   return false; // disable for now
   
   $sql = "SELECT TIME_TO_SEC(TIMEDIFF(NOW(), MAX(`date`))) FROM blox_leaderboard WHERE ip = '{$ip}'";
-  if ($timeDiff = mysql_query($sql, $db)) {
-    $timeDiff = mysql_fetch_array($timeDiff);
+  if ($timeDiff = mysqli_query($db, $sql)) {
+    $timeDiff = mysqli_fetch_array($timeDiff);
     $timeDiff = $timeDiff[0];
     return $timeDiff && intval($timeDiff) < 2 * 60;
   }
@@ -91,7 +91,7 @@ function get_ip() {
 
 function num_recent_players($db) {
   $sql = "SELECT COUNT(DISTINCT ip) AS n FROM blox_certs WHERE TIME_TO_SEC(TIMEDIFF(NOW(), `date`)) <= 60 * 60 *24";
-  $n = mysql_fetch_assoc(mysql_query($sql, $db));
+  $n = mysqli_fetch_assoc(mysqli_query($db, $sql));
   return $n['n'];
 }
 
@@ -102,14 +102,12 @@ function num_recent_players($db) {
 
 include 'blox_config.php';
 
-$db = mysql_connect('mysqlhost',
+$db = mysqli_connect('mysqlhost',
       $bloxConfig['db']['user'],
-      $bloxConfig['db']['pass']);
+      $bloxConfig['db']['pass'],
+      $bloxConfig['db']['db']);
 if (!$db) {
   echo 'Failed to connect.'; exit(1);
-}
-if (!mysql_select_db($bloxConfig['db']['db'], $db)) {
-  echo 'Cannot connect to leaderboard database.'; exit(1);
 }
 
 if (isset($_POST['score'])) {
@@ -120,7 +118,7 @@ $leaderboard = leaderboard_records($db);
 $cert = encryptCert(makeCert($db), $bloxConfig['salt']);
 $num_players = num_recent_players($db);
 
-mysql_close($db);
+mysqli_close($db);
 
 ?>
 

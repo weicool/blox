@@ -1,10 +1,6 @@
 <?php
 
-if (true || $_SERVER['HTTP_HOST'] == 'localhost') {
-  include 'config.inc.php';
-} else {
-  include '/home/weicool/shared/config.inc.php';
-}
+include 'config.inc.php';
 
 $bloxConfig = array(
     'db' => array(
@@ -31,19 +27,19 @@ function validRecordRequest($score, $level, $cert, $ip, $salt, $db) {
           WHERE ip = '{$ip}' AND
                 MD5(CONCAT('{$salt}', `cert`)) = '{$cert}' AND
                 TIME_TO_SEC(TIMEDIFF(NOW(), `date`)) >= {$minTimeNeeded}";
-  mysql_query($sql, $db);
+  mysqli_query($db, $sql);
   
-  return mysql_affected_rows($db) >= 1;
+  return mysqli_affected_rows($db) >= 1;
 }
 
 /** Make a certificate and record it for later. */
 function makeCert($db) {
   $cert = strval(time());
-  $ip = mysql_real_escape_string(get_ip(), $db);
+  $ip = mysqli_real_escape_string($db, get_ip());
   
   $sql = "INSERT INTO blox_certs (`cert`, `ip`, `date`)
           VALUES ('{$cert}', '{$ip}', NOW())";
-  mysql_query($sql, $db);
+  mysqli_query($db, $sql);
   
   return $cert;
 }
